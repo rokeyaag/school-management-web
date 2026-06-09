@@ -4,8 +4,10 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import Sidebar from './components/common/Sidebar'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
+import Students from './pages/students/Students'
+import StudentDetail from './pages/students/StudentDetail'
+import StudentPrint from './pages/students/StudentPrint'
 
-const Students = () => <div className="p-8 text-white text-2xl font-bold">🎓 Students</div>
 const Teachers = () => <div className="p-8 text-white text-2xl font-bold">👨‍🏫 Teachers</div>
 const Attendance = () => <div className="p-8 text-white text-2xl font-bold">✅ Attendance</div>
 const Exams = () => <div className="p-8 text-white text-2xl font-bold">📝 Exams</div>
@@ -40,9 +42,11 @@ function App() {
         }} />
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/students/:id/print" element={<StudentPrint />} />
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/students" element={<Students />} />
+            <Route path="/students/:id" element={<StudentDetail />} />
             <Route path="/teachers" element={<Teachers />} />
             <Route path="/attendance" element={<Attendance />} />
             <Route path="/exams" element={<Exams />} />
