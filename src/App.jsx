@@ -10,9 +10,9 @@ import StudentPrint from './pages/students/StudentPrint'
 import Teachers from './pages/teachers/Teachers'
 import TeacherDetail from './pages/teachers/TeacherDetail'
 import TeacherPrint from './pages/teachers/TeacherPrint'
+import Attendance from './pages/attendance/Attendance'
+import Exams from './pages/exams/Exams'
 
-const Attendance = () => <div className="p-8 text-white text-2xl font-bold">✅ Attendance</div>
-const Exams = () => <div className="p-8 text-white text-2xl font-bold">📝 Exams</div>
 const Fees = () => <div className="p-8 text-white text-2xl font-bold">💳 Fees</div>
 const Notices = () => <div className="p-8 text-white text-2xl font-bold">📢 Notices</div>
 const AI = () => <div className="p-8 text-white text-2xl font-bold">🤖 AI Insights</div>
