@@ -7,8 +7,10 @@ import Dashboard from './pages/dashboard/Dashboard'
 import Students from './pages/students/Students'
 import StudentDetail from './pages/students/StudentDetail'
 import StudentPrint from './pages/students/StudentPrint'
+import Teachers from './pages/teachers/Teachers'
+import TeacherDetail from './pages/teachers/TeacherDetail'
+import TeacherPrint from './pages/teachers/TeacherPrint'
 
-const Teachers = () => <div className="p-8 text-white text-2xl font-bold">👨‍🏫 Teachers</div>
 const Attendance = () => <div className="p-8 text-white text-2xl font-bold">✅ Attendance</div>
 const Exams = () => <div className="p-8 text-white text-2xl font-bold">📝 Exams</div>
 const Fees = () => <div className="p-8 text-white text-2xl font-bold">💳 Fees</div>
@@ -43,11 +45,13 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/students/:id/print" element={<StudentPrint />} />
+          <Route path="/teachers/:id/print" element={<TeacherPrint />} />
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/students" element={<Students />} />
             <Route path="/students/:id" element={<StudentDetail />} />
             <Route path="/teachers" element={<Teachers />} />
+            <Route path="/teachers/:id" element={<TeacherDetail />} />
             <Route path="/attendance" element={<Attendance />} />
             <Route path="/exams" element={<Exams />} />
             <Route path="/fees" element={<Fees />} />
