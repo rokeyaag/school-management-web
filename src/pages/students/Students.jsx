@@ -32,6 +32,12 @@ export default function Students() {
   const [search, setSearch] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [step, setStep] = useState(0)
+  const [classes, setClasses] = useState([])
+  const [sections, setSections] = useState([])
+
+  useEffect(() => {
+    api.get('/academics/classes/').then(r => setClasses(r.data.results || []))
+  }, [])
   const [form, setForm] = useState(initialForm)
   const [submitting, setSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -237,6 +243,18 @@ export default function Students() {
                     </div>
                   </div>
                   <div><label className={labelClass}>Roll Number</label><input value={form.roll} onChange={setField('roll')} className={inputClass} /></div>
+                  <div><label className={labelClass}>Class</label>
+                    <select value={form.class_name} onChange={e => { setField('class_name')(e); api.get('/academics/sections/?class_id=' + e.target.value).then(r => setSections(r.data.results || [])) }} className={inputClass}>
+                      <option value="">Select Class</option>
+                      {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                  </div>
+                  <div><label className={labelClass}>Section</label>
+                    <select value={form.section} onChange={setField('section')} className={inputClass}>
+                      <option value="">Select Section</option>
+                      {sections.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                    </select>
+                  </div>
                 </div>
               )}
 

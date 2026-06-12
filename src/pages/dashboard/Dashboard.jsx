@@ -28,7 +28,7 @@ export default function Dashboard() {
         const [stuRes, tchRes, attRes, feeRes] = await Promise.all([
           api.get('/students/'),
           api.get('/teachers/'),
-          api.get('/attendance/'),
+          api.get('/attendance/report/'),
           api.get('/fees/payments/?status=due'),
         ])
         const students = stuRes.data.count || 0
