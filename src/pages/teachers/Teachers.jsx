@@ -9,6 +9,9 @@ const CLOUDINARY_PRESET = 'dv1zh1rc'
 
 const steps = ['Basic Info', 'Professional Info']
 
+
+
+
 const initialForm = {
   full_name: '', email: '', password: '', phone: '',
   employee_id: '', specialization: '', qualification: '',
@@ -28,6 +31,22 @@ export default function Teachers() {
   const [submitting, setSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
   const fileRef = useRef()
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const data = new FormData()
+      data.append('file', file)
+      data.append('upload_preset', CLOUDINARY_PRESET)
+      const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: data })
+      const json = await res.json()
+      setForm(p => ({ ...p, avatar: json.secure_url }))
+      toast.success('Photo uploaded!')
+    } catch { toast.error('Upload failed') }
+    finally { setUploading(false) }
+  }
   const navigate = useNavigate()
 
   const fetchTeachers = async () => {
@@ -56,21 +75,21 @@ export default function Teachers() {
 
   const setField = (field) => (e) => setForm(p => ({ ...p, [field]: e.target.value }))
 
-  const handlePhotoUpload = async (e) => {
-    const file = e.target.files[0]
-    if (!file) return
-    setUploading(true)
-    try {
-      const data = new FormData()
-      data.append('file', file)
-      data.append('upload_preset', CLOUDINARY_PRESET)
-      const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: data })
-      const json = await res.json()
-      setForm(p => ({ ...p, avatar: json.secure_url }))
-      toast.success('Photo uploaded!')
-    } catch { toast.error('Upload failed') }
-    finally { setUploading(false) }
-  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const handleSubmit = async () => {
     setSubmitting(true)

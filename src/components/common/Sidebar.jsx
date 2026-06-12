@@ -11,7 +11,7 @@ const navItems = [
   { to: '/teachers', icon: Users, label: 'Teachers' },
   { to: '/attendance', icon: ClipboardCheck, label: 'Attendance' },
   { to: '/exams', icon: BookOpen, label: 'Exams' },
-  { to: '/fees', icon: CreditCard, label: 'Fees' },
+  { to: '/fees', icon: CreditCard, label: 'Payments' },
   { to: '/notices', icon: Bell, label: 'Notices' },
   { to: '/ai', icon: Bot, label: 'AI Insights' },
 ]
@@ -35,7 +35,7 @@ export default function Sidebar() {
           </div>
           <div>
             <h2 className="text-white font-bold text-sm">School AI</h2>
-            <p className="text-slate-400 text-xs">{user?.role?.replace('_', ' ')}</p>
+            <p className="text-slate-400 text-xs capitalize">{user?.role === 'super_admin' ? 'super admin' : user?.role === 'school_admin' ? 'school admin' : user?.role || 'user'}</p>
           </div>
         </div>
       </div>

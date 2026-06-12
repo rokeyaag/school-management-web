@@ -22,10 +22,7 @@ export default function Exams() {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [form, setForm] = useState({
-    name: '', exam_type: 'other', class_name: '',
-    start_date: '', end_date: '',
-  })
+  const [form, setForm] = useState({ name: '', exam_type: 'other', class_name: '', start_date: '', end_date: '' })
   const navigate = useNavigate()
 
   const fetchData = async () => {
@@ -52,8 +49,8 @@ export default function Exams() {
       setShowModal(false)
       setForm({ name: '', exam_type: 'other', class_name: '', start_date: '', end_date: '' })
       fetchData()
-    } catch (err) {
-      toast.error(err.response?.data?.name?.[0] || 'Failed to create exam')
+    } catch {
+      toast.error('Failed to create exam')
     } finally { setSubmitting(false) }
   }
 
@@ -64,16 +61,6 @@ export default function Exams() {
       toast.success('Exam deleted')
       fetchData()
     } catch { toast.error('Failed') }
-  }
-
-  const GRADE_COLORS = {
-    'A+': 'bg-green-500/20 text-green-400',
-    'A': 'bg-green-500/20 text-green-400',
-    'A-': 'bg-blue-500/20 text-blue-400',
-    'B': 'bg-yellow-500/20 text-yellow-400',
-    'C': 'bg-orange-500/20 text-orange-400',
-    'D': 'bg-red-500/20 text-red-400',
-    'F': 'bg-red-600/20 text-red-500',
   }
 
   return (
@@ -89,7 +76,6 @@ export default function Exams() {
         </button>
       </div>
 
-      {/* Exam Cards */}
       {loading ? (
         <div className="text-slate-400 text-center py-12">Loading...</div>
       ) : exams.length === 0 ? (
@@ -110,19 +96,17 @@ export default function Exams() {
                   {exam.exam_type_display}
                 </span>
               </div>
-
               <div className="space-y-2 mb-4">
                 <div className="flex items-center gap-2 text-slate-400 text-xs">
                   <Calendar size={12} />
-                  <span>{exam.start_date} → {exam.end_date}</span>
+                  <span>{exam.start_date} to {exam.end_date}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${exam.is_published ? 'bg-green-500/20 text-green-400' : 'bg-slate-600 text-slate-400'}`}>
-                    {exam.is_published ? '● Published' : '● Draft'}
+                    {exam.is_published ? 'Published' : 'Draft'}
                   </span>
                 </div>
               </div>
-
               <div className="flex gap-2">
                 <button onClick={() => navigate(`/exams/${exam.id}`)}
                   className="flex-1 flex items-center justify-center gap-2 bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white px-3 py-2 rounded-xl text-xs transition">
@@ -138,7 +122,6 @@ export default function Exams() {
         </div>
       )}
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-[#1E293B] rounded-2xl w-full max-w-md border border-slate-700">
@@ -146,16 +129,19 @@ export default function Exams() {
               <h2 className="text-white font-bold text-lg">Create New Exam</h2>
             </div>
             <div className="p-6 space-y-4">
-              <div><label className={labelClass}>Exam Name *</label>
+              <div>
+                <label className={labelClass}>Exam Name *</label>
                 <input value={form.name} onChange={setField('name')} placeholder="e.g. Annual Exam 2026" className={inputClass} />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div><label className={labelClass}>Exam Type</label>
+                <div>
+                  <label className={labelClass}>Exam Type</label>
                   <select value={form.exam_type} onChange={setField('exam_type')} className={inputClass}>
                     {EXAM_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                   </select>
                 </div>
-                <div><label className={labelClass}>Class *</label>
+                <div>
+                  <label className={labelClass}>Class *</label>
                   <select value={form.class_name} onChange={setField('class_name')} className={inputClass}>
                     <option value="">Select Class</option>
                     {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -163,10 +149,12 @@ export default function Exams() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div><label className={labelClass}>Start Date *</label>
+                <div>
+                  <label className={labelClass}>Start Date *</label>
                   <input type="date" value={form.start_date} onChange={setField('start_date')} className={inputClass} />
                 </div>
-                <div><label className={labelClass}>End Date *</label>
+                <div>
+                  <label className={labelClass}>End Date *</label>
                   <input type="date" value={form.end_date} onChange={setField('end_date')} className={inputClass} />
                 </div>
               </div>

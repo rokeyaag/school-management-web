@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Pencil, Trash2, Save, X, Printer } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, Save, X, Printer, Upload } from 'lucide-react'
+import { useRef } from 'react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 
@@ -11,6 +12,8 @@ const Field = ({ label, value }) => (
   </div>
 )
 
+const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dr7c7wxaw/image/upload'
+const CLOUDINARY_PRESET = 'dv1zh1rc'
 const inputClass = "w-full bg-[#0F172A] border border-slate-600 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500"
 
 export default function TeacherDetail() {
@@ -18,6 +21,24 @@ export default function TeacherDetail() {
   const navigate = useNavigate()
   const [teacher, setTeacher] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef()
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const data = new FormData()
+      data.append('file', file)
+      data.append('upload_preset', CLOUDINARY_PRESET)
+      const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: data })
+      const json = await res.json()
+      setForm(p => ({ ...p, avatar: json.secure_url }))
+      toast.success('Photo uploaded!')
+    } catch { toast.error('Upload failed') }
+    finally { setUploading(false) }
+  }
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({})
   const [saving, setSaving] = useState(false)
@@ -93,8 +114,8 @@ export default function TeacherDetail() {
         <div className="flex gap-8 items-start">
           <div className="flex-shrink-0">
             <div className="w-28 h-28 rounded-2xl bg-slate-700 overflow-hidden border-2 border-slate-600 flex items-center justify-center">
-              {teacher.avatar
-                ? <img src={teacher.avatar} className="w-full h-full object-cover" alt="" />
+              {(editing ? form?.avatar : teacher.avatar)
+                ? <img src={editing ? form?.avatar : teacher.avatar} className="w-full h-full object-cover" alt="" />
                 : <span className="text-4xl font-bold text-slate-400">{teacher.full_name?.charAt(0)?.toUpperCase()}</span>
               }
             </div>
@@ -103,6 +124,15 @@ export default function TeacherDetail() {
                 {teacher.is_active ? '● Active' : '● Inactive'}
               </span>
             </div>
+            {editing && (
+              <div className="mt-3 text-center">
+                <input type="file" accept="image/*" ref={fileRef} onChange={handlePhotoUpload} className="hidden" />
+                <button type="button" onClick={() => fileRef.current.click()} disabled={uploading}
+                  className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-xl text-xs transition mx-auto">
+                  <Upload size={12} /> {uploading ? 'Uploading...' : 'Change Photo'}
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex-1 grid grid-cols-3 gap-5">

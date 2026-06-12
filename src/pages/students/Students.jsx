@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, Search, Eye, ChevronRight, ChevronLeft, Upload } from 'lucide-react'
 import api from '../../api/axiosConfig'
+import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dr7c7wxaw/image/upload'
@@ -24,6 +25,8 @@ const inputClass = "w-full bg-[#0F172A] border border-slate-600 rounded-xl px-4 
 const labelClass = "text-slate-400 text-xs mb-1 block"
 
 export default function Students() {
+  const { user } = useAuth()
+  const isStudent = user?.role === 'student'
   const [students, setStudents] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -104,9 +107,9 @@ export default function Students() {
           <h1 className="text-2xl font-bold text-white">Students</h1>
           <p className="text-slate-400 text-sm mt-1">Manage all students</p>
         </div>
-        <button onClick={openModal} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition">
+        {!isStudent && <button onClick={openModal} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition">
           <Plus size={16} /> Add Student
-        </button>
+        </button>}
       </div>
 
       <div className="relative mb-6">

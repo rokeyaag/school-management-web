@@ -12,10 +12,12 @@ import TeacherDetail from './pages/teachers/TeacherDetail'
 import TeacherPrint from './pages/teachers/TeacherPrint'
 import Attendance from './pages/attendance/Attendance'
 import Exams from './pages/exams/Exams'
+import ExamDetail from './pages/exams/ExamDetail'
 
-const Fees = () => <div className="p-8 text-white text-2xl font-bold">💳 Fees</div>
-const Notices = () => <div className="p-8 text-white text-2xl font-bold">📢 Notices</div>
-const AI = () => <div className="p-8 text-white text-2xl font-bold">🤖 AI Insights</div>
+import Fees from './pages/fees/Fees'
+
+import Notices from './pages/notices/Notices'
+import AIInsights from './pages/ai/AIInsights'
 
 function Layout() {
   const { user, loading } = useAuth()
@@ -54,9 +56,10 @@ function App() {
             <Route path="/teachers/:id" element={<TeacherDetail />} />
             <Route path="/attendance" element={<Attendance />} />
             <Route path="/exams" element={<Exams />} />
+            <Route path="/exams/:id" element={<ExamDetail />} />
             <Route path="/fees" element={<Fees />} />
             <Route path="/notices" element={<Notices />} />
-            <Route path="/ai" element={<AI />} />
+            <Route path="/ai" element={<AIInsights />} />
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>
         </Routes>
