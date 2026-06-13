@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Bell, Trash2, X, Users } from 'lucide-react'
+import { Plus, Bell, Trash2, X, Users, Brain, Loader } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 
@@ -17,6 +17,8 @@ export default function Notices() {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [generating, setGenerating] = useState(false)
+  const [noticeLang, setNoticeLang] = useState('en')
   const [filterRole, setFilterRole] = useState('all')
   const [selected, setSelected] = useState(null)
   const [form, setForm] = useState({ title: '', content: '', target_role: 'all', attachment: '' })
@@ -32,6 +34,17 @@ export default function Notices() {
   useEffect(() => { fetchNotices() }, [])
 
   const setField = (f) => (e) => setForm(p => ({ ...p, [f]: e.target.value }))
+
+  const handleAIGenerate = async () => {
+    if (!form.title) return toast.error('Enter a title first')
+    setGenerating(true)
+    try {
+      const res = await api.post('/notices/generate/', { topic: form.title, target_role: form.target_role, lang: noticeLang })
+      setForm(p => ({ ...p, content: res.data.content }))
+      toast.success('AI generated!')
+    } catch { toast.error('Failed') }
+    finally { setGenerating(false) }
+  }
 
   const handleSubmit = async () => {
     if (!form.title || !form.content) return toast.error('Title and content required')
@@ -57,13 +70,8 @@ export default function Notices() {
   }
 
   const getRoleInfo = (role) => TARGET_ROLES.find(r => r.value === role) || TARGET_ROLES[0]
-
   const filtered = filterRole === 'all' ? notices : notices.filter(n => n.target_role === filterRole || n.target_role === 'all')
-
-  const formatDate = (dt) => {
-    const d = new Date(dt)
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-  }
+  const formatDate = (dt) => new Date(dt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
 
   return (
     <div className="p-8">
@@ -78,7 +86,6 @@ export default function Notices() {
         </button>
       </div>
 
-      {/* Filter Tabs */}
       <div className="flex gap-2 mb-6 flex-wrap">
         {TARGET_ROLES.map(r => (
           <button key={r.value} onClick={() => setFilterRole(r.value)}
@@ -118,20 +125,12 @@ export default function Notices() {
                     <Trash2 size={15} />
                   </button>
                 </div>
-                {n.attachment && (
-                  <a href={n.attachment} target="_blank" rel="noreferrer"
-                    onClick={e => e.stopPropagation()}
-                    className="mt-3 inline-flex items-center gap-1 text-blue-400 text-xs hover:underline">
-                    View Attachment
-                  </a>
-                )}
               </div>
             )
           })}
         </div>
       )}
 
-      {/* Notice Detail Modal */}
       {selected && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-[#1E293B] rounded-2xl w-full max-w-lg border border-slate-700">
@@ -147,12 +146,6 @@ export default function Notices() {
             </div>
             <div className="p-6">
               <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">{selected.content}</p>
-              {selected.attachment && (
-                <a href={selected.attachment} target="_blank" rel="noreferrer"
-                  className="mt-4 inline-flex items-center gap-1 text-blue-400 text-sm hover:underline">
-                  View Attachment
-                </a>
-              )}
             </div>
             <div className="p-6 border-t border-slate-700 flex justify-between">
               <button onClick={() => handleDelete(selected.id)}
@@ -168,7 +161,6 @@ export default function Notices() {
         </div>
       )}
 
-      {/* Create Notice Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-[#1E293B] rounded-2xl w-full max-w-lg border border-slate-700">
@@ -188,7 +180,22 @@ export default function Notices() {
                 </select>
               </div>
               <div>
-                <label className="text-slate-400 text-xs mb-1 block">Content *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-slate-400 text-xs">Content *</label>
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1">
+                      <button type="button" onClick={() => setNoticeLang('en')}
+                        className={`px-2 py-1 rounded text-xs font-medium transition ${noticeLang === 'en' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}>EN</button>
+                      <button type="button" onClick={() => setNoticeLang('bn')}
+                        className={`px-2 py-1 rounded text-xs font-medium transition ${noticeLang === 'bn' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}>বাং</button>
+                    </div>
+                    <button type="button" onClick={handleAIGenerate} disabled={generating}
+                      className="flex items-center gap-1 bg-purple-600/20 hover:bg-purple-600 text-purple-400 hover:text-white px-2 py-1 rounded-lg text-xs transition disabled:opacity-50">
+                      {generating ? <Loader size={10} className="animate-spin" /> : <Brain size={10} />}
+                      {generating ? 'Generating...' : 'AI Generate'}
+                    </button>
+                  </div>
+                </div>
                 <textarea value={form.content} onChange={setField('content')} rows={5}
                   placeholder="Write notice content..." className={inputClass} />
               </div>

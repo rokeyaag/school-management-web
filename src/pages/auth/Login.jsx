@@ -67,9 +67,9 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <School size={28} className="text-white" />
+            <img src="https://res.cloudinary.com/dr7c7wxaw/image/upload/v1781360131/WhatsApp_Image_2026-05-30_at_8.06.51_PM_ctne7a.jpg" className="w-full h-full object-cover rounded-2xl" alt="CMS Logo" />
           </div>
-          <h1 className="text-2xl font-bold text-white">School Management AI</h1>
+          <h1 className="text-2xl font-bold text-white">Cambrian Model School</h1>
           <p className="text-slate-400 mt-1 text-sm">
             {tab === 'login' ? 'Sign in to your account' : tab === 'register' ? 'Create your school account' : 'Reset your password'}
           </p>
@@ -202,7 +202,7 @@ export default function Login() {
           )}
         </div>
 
-        <p className="text-center text-slate-500 text-sm mt-6">School Management AI System © 2025</p>
+        <p className="text-center text-slate-500 text-sm mt-6">Cambrian Model School © 2026</p>
       </div>
     </div>
   )
