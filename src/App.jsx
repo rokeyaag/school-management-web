@@ -18,6 +18,7 @@ import Fees from './pages/fees/Fees'
 
 import Notices from './pages/notices/Notices'
 import AIInsights from './pages/ai/AIInsights'
+import AdminPanel from './pages/admin/AdminPanel'
 
 function Layout() {
   const { user, loading } = useAuth()
@@ -60,6 +61,7 @@ function App() {
             <Route path="/fees" element={<Fees />} />
             <Route path="/notices" element={<Notices />} />
             <Route path="/ai" element={<AIInsights />} />
+            <Route path="/admin-panel" element={<AdminPanel />} />
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>
         </Routes>

@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen,
-  ClipboardCheck, FileText, CreditCard, Bell, Bot, LogOut
+  ClipboardCheck, FileText, CreditCard, Bell, Bot, LogOut, Shield
 } from 'lucide-react'
 
 const navItems = [
@@ -14,6 +14,7 @@ const navItems = [
   { to: '/fees', icon: CreditCard, label: 'Payments' },
   { to: '/notices', icon: Bell, label: 'Notices' },
   { to: '/ai', icon: Bot, label: 'AI Insights' },
+  { to: '/admin-panel', icon: Shield, label: 'Admin Panel', role: 'super_admin' },
 ]
 
 export default function Sidebar() {
@@ -42,7 +43,7 @@ export default function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 p-4 space-y-1">
-        {navItems.map(({ to, icon: Icon, label }) => (
+        {navItems.filter(item => !item.role || item.role === user?.role).map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
