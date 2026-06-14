@@ -19,6 +19,9 @@ import Fees from './pages/fees/Fees'
 import Notices from './pages/notices/Notices'
 import AIInsights from './pages/ai/AIInsights'
 import AdminPanel from './pages/admin/AdminPanel'
+import LessonPlan from './pages/lesson/LessonPlan'
+import StudyRecommendation from './pages/study/StudyRecommendation'
+import SchoolHealth from './pages/health/SchoolHealth'
 
 function Layout() {
   const { user, loading } = useAuth()
@@ -62,6 +65,9 @@ function App() {
             <Route path="/notices" element={<Notices />} />
             <Route path="/ai" element={<AIInsights />} />
             <Route path="/admin-panel" element={<AdminPanel />} />
+            <Route path="/lesson-plan" element={<LessonPlan />} />
+            <Route path="/study-recommendation" element={<StudyRecommendation />} />
+            <Route path="/school-health" element={<SchoolHealth />} />
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>
         </Routes>

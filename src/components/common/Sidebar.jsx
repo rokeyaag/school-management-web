@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import api from '../../api/axiosConfig'
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen,
-  ClipboardCheck, FileText, CreditCard, Bell, Bot, LogOut, Shield
+  ClipboardCheck, FileText, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity
 } from 'lucide-react'
 
 const navItems = [
@@ -16,6 +16,9 @@ const navItems = [
   { to: '/fees', icon: CreditCard, label: 'Payments' },
   { to: '/notices', icon: Bell, label: 'Notices', badge: true },
   { to: '/ai', icon: Bot, label: 'AI Insights' },
+  { to: '/lesson-plan', icon: BookMarked, label: 'Lesson Plan' },
+  { to: '/study-recommendation', icon: Target, label: 'Study Plan' },
+  { to: '/school-health', icon: Activity, label: 'School Health', role: 'super_admin' },
   { to: '/admin-panel', icon: Shield, label: 'Admin Panel', role: 'super_admin' },
 ]
 

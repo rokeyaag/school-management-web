@@ -31,7 +31,7 @@ export default function Exams() {
         api.get('/exams/'),
         api.get('/academics/classes/'),
       ])
-      setExams(examsRes.data.results || [])
+      setExams(examsRes.data.results || examsRes.data || [])
       setClasses(classesRes.data.results || [])
     } catch { toast.error('Failed to load') }
     finally { setLoading(false) }
