@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Sidebar from './components/common/Sidebar'
+import FloatingChatbot from './components/common/FloatingChatbot'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
 import Students from './pages/students/Students'
@@ -13,15 +14,16 @@ import TeacherPrint from './pages/teachers/TeacherPrint'
 import Attendance from './pages/attendance/Attendance'
 import Exams from './pages/exams/Exams'
 import ExamDetail from './pages/exams/ExamDetail'
-
 import Fees from './pages/fees/Fees'
-
 import Notices from './pages/notices/Notices'
 import AIInsights from './pages/ai/AIInsights'
 import AdminPanel from './pages/admin/AdminPanel'
 import LessonPlan from './pages/lesson/LessonPlan'
 import StudyRecommendation from './pages/study/StudyRecommendation'
 import SchoolHealth from './pages/health/SchoolHealth'
+import QuestionGenerator from './pages/ai/QuestionGenerator'
+import AttendancePredictor from './pages/ai/AttendancePredictor'
+import Settings from './pages/settings/Settings'
 
 function Layout() {
   const { user, loading } = useAuth()
@@ -37,6 +39,7 @@ function Layout() {
       <main className="flex-1 overflow-auto">
         <Outlet />
       </main>
+      <FloatingChatbot />
     </div>
   )
 }
@@ -68,6 +71,9 @@ function App() {
             <Route path="/lesson-plan" element={<LessonPlan />} />
             <Route path="/study-recommendation" element={<StudyRecommendation />} />
             <Route path="/school-health" element={<SchoolHealth />} />
+            <Route path="/question-generator" element={<QuestionGenerator />} />
+            <Route path="/attendance-predictor" element={<AttendancePredictor />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>
         </Routes>
@@ -75,5 +81,4 @@ function App() {
     </AuthProvider>
   )
 }
-
 export default App

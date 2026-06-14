@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import api from '../../api/axiosConfig'
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen,
-  ClipboardCheck, FileText, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity
+  ClipboardCheck, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity, FileQuestion, TrendingDown, Settings
 } from 'lucide-react'
 
 const navItems = [
@@ -18,8 +18,11 @@ const navItems = [
   { to: '/ai', icon: Bot, label: 'AI Insights' },
   { to: '/lesson-plan', icon: BookMarked, label: 'Lesson Plan' },
   { to: '/study-recommendation', icon: Target, label: 'Study Plan' },
+  { to: '/question-generator', icon: FileQuestion, label: 'Question Gen' },
+  { to: '/attendance-predictor', icon: TrendingDown, label: 'Attendance AI' },
   { to: '/school-health', icon: Activity, label: 'School Health', role: 'super_admin' },
   { to: '/admin-panel', icon: Shield, label: 'Admin Panel', role: 'super_admin' },
+  { to: '/settings', icon: Settings, label: 'Settings' },
 ]
 
 export default function Sidebar() {
@@ -39,10 +42,7 @@ export default function Sidebar() {
     return () => clearInterval(interval)
   }, [])
 
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
+  const handleLogout = () => { logout(); navigate('/login') }
 
   return (
     <aside className="w-64 min-h-screen bg-[#1E293B] border-r border-slate-700 flex flex-col">
@@ -58,7 +58,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navItems.filter(item => !item.role || item.role === user?.role).map(({ to, icon: Icon, label, badge }) => (
           <NavLink key={to} to={to}
             className={({ isActive }) =>
