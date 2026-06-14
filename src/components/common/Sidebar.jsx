@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import api from '../../api/axiosConfig'
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen,
-  ClipboardCheck, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity, FileQuestion, TrendingDown, Settings
+  ClipboardCheck, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity, FileQuestion, TrendingDown, Settings, AlertCircle, Calculator
 } from 'lucide-react'
 
 const navItems = [
@@ -14,12 +14,14 @@ const navItems = [
   { to: '/attendance', icon: ClipboardCheck, label: 'Attendance' },
   { to: '/exams', icon: BookOpen, label: 'Exams' },
   { to: '/fees', icon: CreditCard, label: 'Payments' },
+  { to: '/accounting', icon: Calculator, label: 'Accounting' },
   { to: '/notices', icon: Bell, label: 'Notices', badge: true },
   { to: '/ai', icon: Bot, label: 'AI Insights' },
   { to: '/lesson-plan', icon: BookMarked, label: 'Lesson Plan' },
   { to: '/study-recommendation', icon: Target, label: 'Study Plan' },
   { to: '/question-generator', icon: FileQuestion, label: 'Question Gen' },
   { to: '/attendance-predictor', icon: TrendingDown, label: 'Attendance AI' },
+  { to: '/fee-defaulter', icon: AlertCircle, label: 'Fee Alert' },
   { to: '/school-health', icon: Activity, label: 'School Health', role: 'super_admin' },
   { to: '/admin-panel', icon: Shield, label: 'Admin Panel', role: 'super_admin' },
   { to: '/settings', icon: Settings, label: 'Settings' },
