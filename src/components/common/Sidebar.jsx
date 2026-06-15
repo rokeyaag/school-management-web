@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import api from '../../api/axiosConfig'
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen,
-  ClipboardCheck, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity, FileQuestion, TrendingDown, Settings, AlertCircle, Calculator
+  ClipboardCheck, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity, FileQuestion, TrendingDown, Settings, AlertCircle, Calculator, FileText
 } from 'lucide-react'
 
 const navItems = [
@@ -22,6 +22,7 @@ const navItems = [
   { to: '/question-generator', icon: FileQuestion, label: 'Question Gen' },
   { to: '/attendance-predictor', icon: TrendingDown, label: 'Attendance AI' },
   { to: '/fee-defaulter', icon: AlertCircle, label: 'Fee Alert' },
+  { to: '/parent-report', icon: FileText, label: 'Parent Report' },
   { to: '/school-health', icon: Activity, label: 'School Health', role: 'super_admin' },
   { to: '/admin-panel', icon: Shield, label: 'Admin Panel', role: 'super_admin' },
   { to: '/settings', icon: Settings, label: 'Settings' },
@@ -59,7 +60,6 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navItems.filter(item => !item.role || item.role === user?.role).map(({ to, icon: Icon, label, badge }) => (
           <NavLink key={to} to={to}
@@ -76,7 +76,6 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
-
       <div className="p-4 border-t border-slate-700">
         <div className="flex items-center gap-3 px-3 py-2 mb-2">
           <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-bold text-white">

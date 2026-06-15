@@ -24,6 +24,7 @@ import SchoolHealth from './pages/health/SchoolHealth'
 import QuestionGenerator from './pages/ai/QuestionGenerator'
 import AttendancePredictor from './pages/ai/AttendancePredictor'
 import FeeDefaulter from './pages/ai/FeeDefaulter'
+import ParentReport from './pages/ai/ParentReport'
 import Settings from './pages/settings/Settings'
 import Accounting from './pages/accounting/Accounting'
 
@@ -76,6 +77,7 @@ function App() {
             <Route path="/question-generator" element={<QuestionGenerator />} />
             <Route path="/attendance-predictor" element={<AttendancePredictor />} />
             <Route path="/fee-defaulter" element={<FeeDefaulter />} />
+            <Route path="/parent-report" element={<ParentReport />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/accounting" element={<Accounting />} />
             <Route path="/" element={<Navigate to="/dashboard" />} />
