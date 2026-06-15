@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Gallery() {
   const { user } = useAuth();
-  const isAdmin = user?.role === "school_admin";
+  const isAdmin = user?.role === "school_admin" || user?.role === "super_admin";
 
   const [albums, setAlbums] = useState([]);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
@@ -182,11 +182,11 @@ export default function Gallery() {
             <p>এই album এ কোনো ছবি নেই</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-2">
             {selectedAlbum.photos?.map(photo => (
-              <div key={photo.id} className="relative group rounded-xl overflow-hidden shadow bg-gray-100 aspect-square">
+              <div key={photo.id} className="relative group rounded-xl overflow-hidden shadow bg-slate-700 aspect-square">
                 <img src={photo.image_url} alt={photo.caption}
-                  className="w-full h-full object-cover cursor-pointer group-hover:scale-105 transition duration-300"
+                  className="w-full h-full object-cover object-center cursor-pointer group-hover:scale-105 transition duration-300"
                   onClick={() => setLightboxPhoto(photo)} />
                 {isAdmin && (
                   <button onClick={() => deletePhoto(photo.id)}
@@ -203,20 +203,20 @@ export default function Gallery() {
       {/* Create Album Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
+          <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md shadow-xl border border-slate-700">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">নতুন Album তৈরি করুন</h2>
+              <h2 className="text-lg font-bold text-white">নতুন Album তৈরি করুন</h2>
               <button onClick={() => setShowCreateModal(false)}><X className="w-5 h-5" /></button>
             </div>
             <input type="text" placeholder="Album এর নাম *" value={newAlbum.title}
               onChange={e => setNewAlbum({ ...newAlbum, title: e.target.value })}
-              className="w-full border rounded-lg px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-slate-600 bg-slate-700 text-white rounded-lg px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400" />
             <textarea placeholder="বিবরণ (optional)" value={newAlbum.description}
               onChange={e => setNewAlbum({ ...newAlbum, description: e.target.value })}
-              className="w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" rows={3} />
+              className="w-full border border-slate-600 bg-slate-700 text-white rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none placeholder-slate-400" rows={3} />
             <div className="flex gap-2 justify-end">
               <button onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 border rounded-lg hover:bg-gray-50">বাতিল</button>
+                className="px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700">বাতিল</button>
               <button onClick={createAlbum}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">তৈরি করুন</button>
             </div>
@@ -227,9 +227,9 @@ export default function Gallery() {
       {/* Upload Photo Modal */}
       {showUploadModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
+          <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md shadow-xl border border-slate-700">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">Photo Upload করুন</h2>
+              <h2 className="text-lg font-bold text-white">Photo Upload করুন</h2>
               <button onClick={() => setShowUploadModal(false)}><X className="w-5 h-5" /></button>
             </div>
             <input type="file" accept="image/*"
@@ -240,7 +240,7 @@ export default function Gallery() {
               className="w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             <div className="flex gap-2 justify-end">
               <button onClick={() => setShowUploadModal(false)}
-                className="px-4 py-2 border rounded-lg hover:bg-gray-50">বাতিল</button>
+                className="px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700">বাতিল</button>
               <button onClick={uploadPhoto} disabled={uploading || !uploadData.image}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
                 {uploading ? "Uploading..." : "Upload করুন"}
