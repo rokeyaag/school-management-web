@@ -27,6 +27,7 @@ import FeeDefaulter from './pages/ai/FeeDefaulter'
 import ParentReport from './pages/ai/ParentReport'
 import Settings from './pages/settings/Settings'
 import Accounting from './pages/accounting/Accounting'
+import Gallery from './pages/Gallery'
 
 function Layout() {
   const { user, loading } = useAuth()
@@ -80,6 +81,7 @@ function App() {
             <Route path="/parent-report" element={<ParentReport />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/accounting" element={<Accounting />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>
         </Routes>
