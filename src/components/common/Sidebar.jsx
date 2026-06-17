@@ -25,8 +25,19 @@ const navItems = [
   { to: '/parent-report', icon: FileText, label: 'Parent Report' },
   { to: '/school-health', icon: Activity, label: 'School Health', role: 'super_admin' },
   { to: '/admin-panel', icon: Shield, label: 'Admin Panel', role: 'super_admin' },
+  { to: '/timetable', icon: LayoutDashboard, label: 'Timetable' },
+  { to: '/parent-portal', icon: Users, label: 'Parent Portal' },
   { to: '/gallery', icon: Images, label: 'Gallery' },
   { to: '/settings', icon: Settings, label: 'Settings' },
+]
+
+const GROUP_LABELS = [
+  { label: 'Main', items: ['/dashboard'] },
+  { label: 'Academic', items: ['/students', '/teachers', '/attendance', '/exams'] },
+  { label: 'Finance', items: ['/fees', '/accounting'] },
+  { label: 'Communication', items: ['/notices'] },
+  { label: 'AI Features', items: ['/ai', '/lesson-plan', '/study-recommendation', '/question-generator', '/attendance-predictor', '/fee-defaulter', '/parent-report', '/school-health'] },
+  { label: 'System', items: ['/admin-panel', '/gallery', '/settings'] },
 ]
 
 export default function Sidebar() {
@@ -35,61 +46,138 @@ export default function Sidebar() {
   const [unread, setUnread] = useState(0)
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchUnread = async () => {
       try {
         const res = await api.get('/notices/unread-count/')
         setUnread(res.data.count || 0)
       } catch {}
     }
-    fetch()
-    const interval = setInterval(fetch, 30000)
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 30000)
     return () => clearInterval(interval)
   }, [])
 
   const handleLogout = () => { logout(); navigate('/login') }
+  const filteredItems = navItems.filter(item => !item.role || item.role === user?.role)
+  const getGroupItems = (paths) => filteredItems.filter(item => paths.includes(item.to))
+
+  const BG = '#1a1428'
+  const BORDER = 'rgba(139,92,246,0.15)'
+  const ITEM_HOVER = 'rgba(139,92,246,0.12)'
 
   return (
-    <aside className="w-64 min-h-screen bg-[#1E293B] border-r border-slate-700 flex flex-col">
-      <div className="p-6 border-b border-slate-700">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0">
-            <img src="https://res.cloudinary.com/dr7c7wxaw/image/upload/v1781360131/WhatsApp_Image_2026-05-30_at_8.06.51_PM_ctne7a.jpg" className="w-full h-full object-cover" alt="logo" />
+    <aside style={{
+      width: 256, minHeight: '100vh',
+      background: 'linear-gradient(180deg, #1a1428 0%, #1e1535 50%, #1a1428 100%)',
+      borderRight: '1px solid rgba(139,92,246,0.2)',
+      display: 'flex', flexDirection: 'column',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    }}>
+      <style>{`
+        @keyframes fadeInLeft { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+        .nav-lnk { transition: all 0.18s cubic-bezier(0.4,0,0.2,1) !important; }
+        .nav-lnk:hover { background: rgba(139,92,246,0.12) !important; transform: translateX(3px) !important; }
+        .logout-btn:hover { background: rgba(239,68,68,0.12) !important; color: #f87171 !important; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.2); border-radius: 4px; }
+      `}</style>
+
+      {/* Logo */}
+      <div style={{ padding: '20px 16px', borderBottom: '1px solid rgba(139,92,246,0.15)', animation: 'fadeInLeft 0.4s ease' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 12, overflow: 'hidden', flexShrink: 0, boxShadow: '0 4px 12px rgba(124,58,237,0.4)', border: '2px solid rgba(139,92,246,0.4)' }}>
+            <img src="https://res.cloudinary.com/dr7c7wxaw/image/upload/v1781360131/WhatsApp_Image_2026-05-30_at_8.06.51_PM_ctne7a.jpg"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="logo" />
           </div>
-          <div>
-            <h2 className="text-white font-bold text-sm">Cambrian Model School</h2>
-            <p className="text-slate-400 text-xs capitalize">{user?.role === 'super_admin' ? 'Super Admin' : user?.role === 'school_admin' ? 'School Admin' : user?.role || 'user'}</p>
+          <div style={{ minWidth: 0 }}>
+            <h2 style={{ color: '#e2e8f0', fontWeight: 700, fontSize: 13, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Cambrian Model School
+            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+              <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e', animation: 'pulse 2s infinite' }} />
+              <p style={{ color: '#a78bfa', fontSize: 11, margin: 0, textTransform: 'capitalize' }}>
+                {user?.role === 'super_admin' ? 'Super Admin' : user?.role === 'school_admin' ? 'School Admin' : user?.role || 'user'}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {navItems.filter(item => !item.role || item.role === user?.role).map(({ to, icon: Icon, label, badge }) => (
-          <NavLink key={to} to={to}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition ${isActive ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`
-            }>
-            <Icon size={18} />
-            {label}
-            {badge && unread > 0 && (
-              <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                {unread > 9 ? '9+' : unread}
-              </span>
-            )}
-          </NavLink>
-        ))}
+
+      {/* Nav */}
+      <nav style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
+        {GROUP_LABELS.map((group, gi) => {
+          const items = getGroupItems(group.items)
+          if (items.length === 0) return null
+          return (
+            <div key={gi} style={{ marginBottom: 8, animation: `fadeInLeft 0.4s ease ${gi * 60}ms both` }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(139,92,246,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '8px 10px 4px', margin: 0 }}>
+                {group.label}
+              </p>
+              {items.map(({ to, icon: Icon, label, badge }) => (
+                <NavLink key={to} to={to}
+                  className="nav-lnk"
+                  style={({ isActive }) => ({
+                    display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '8px 10px', borderRadius: 10,
+                    fontSize: 13, fontWeight: isActive ? 600 : 500,
+                    color: isActive ? '#fff' : '#94a3b8',
+                    background: isActive ? 'linear-gradient(135deg,#7c3aed,#4f46e5)' : 'transparent',
+                    textDecoration: 'none', marginBottom: 2,
+                    boxShadow: isActive ? '0 4px 12px rgba(124,58,237,0.4)' : 'none',
+                  })}
+                >
+                  {({ isActive }) => (
+                    <>
+                      <div style={{
+                        width: 30, height: 30, borderRadius: 8,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: isActive ? 'rgba(255,255,255,0.2)' : 'rgba(139,92,246,0.1)',
+                        border: isActive ? 'none' : '1px solid rgba(139,92,246,0.15)',
+                        flexShrink: 0, transition: 'all 0.18s ease',
+                      }}>
+                        <Icon size={15} color={isActive ? '#fff' : '#a78bfa'} />
+                      </div>
+                      <span style={{ flex: 1 }}>{label}</span>
+                      {badge && unread > 0 && (
+                        <span style={{
+                          background: isActive ? '#fff' : '#ef4444',
+                          color: isActive ? '#7c3aed' : '#fff',
+                          fontSize: 10, fontWeight: 700,
+                          borderRadius: 20, padding: '1px 6px',
+                          minWidth: 18, textAlign: 'center',
+                          boxShadow: '0 0 8px rgba(239,68,68,0.5)',
+                        }}>
+                          {unread > 9 ? '9+' : unread}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </div>
+          )
+        })}
       </nav>
-      <div className="p-4 border-t border-slate-700">
-        <div className="flex items-center gap-3 px-3 py-2 mb-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-bold text-white">
+
+      {/* User + Logout */}
+      <div style={{ padding: '12px 10px', borderTop: '1px solid rgba(139,92,246,0.15)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px', borderRadius: 12, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', marginBottom: 8 }}>
+          <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0, boxShadow: '0 4px 10px rgba(124,58,237,0.4)' }}>
             {user?.full_name?.charAt(0)?.toUpperCase()}
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-white text-xs font-medium truncate">{user?.full_name}</p>
-            <p className="text-slate-400 text-xs truncate">{user?.email}</p>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ color: '#e2e8f0', fontSize: 12, fontWeight: 600, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.full_name}</p>
+            <p style={{ color: '#64748b', fontSize: 11, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</p>
           </div>
         </div>
-        <button onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-red-500/20 transition w-full">
-          <LogOut size={18} /> Logout
+        <button onClick={handleLogout} className="logout-btn"
+          style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 10, fontSize: 13, fontWeight: 500, color: '#94a3b8', background: 'transparent', border: '1px solid rgba(239,68,68,0.2)', width: '100%', cursor: 'pointer', transition: 'all 0.18s ease' }}>
+          <div style={{ width: 30, height: 30, borderRadius: 8, background: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <LogOut size={15} color="#f87171" />
+          </div>
+          Logout
         </button>
       </div>
     </aside>

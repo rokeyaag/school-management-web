@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Pencil, Trash2, Save, X, Printer } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, Save, X, Printer, BookOpen } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 
@@ -12,6 +12,7 @@ const Field = ({ label, value }) => (
 )
 
 const inputClass = "w-full bg-[#0F172A] border border-slate-600 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500"
+const labelClass = "text-slate-400 text-xs mb-1 block"
 
 export default function StudentDetail() {
   const { id } = useParams()
@@ -21,12 +22,21 @@ export default function StudentDetail() {
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({})
   const [saving, setSaving] = useState(false)
+  const [classes, setClasses] = useState([])
+  const [sections, setSections] = useState([])
+
+  useEffect(() => {
+    api.get('/academics/classes/').then(r => setClasses(r.data.results || []))
+  }, [])
 
   const fetchStudent = async () => {
     try {
-      const res = await api.get(`/students/${id}/`)
+      const res = await api.get('/students/' + id + '/')
       setStudent(res.data)
       setForm(res.data)
+      if (res.data.class_name) {
+        api.get('/academics/sections/?class_id=' + res.data.class_name).then(r => setSections(r.data.results || []))
+      }
     } catch {
       toast.error('Student not found')
       navigate('/students')
@@ -40,7 +50,7 @@ export default function StudentDetail() {
   const handleSave = async () => {
     setSaving(true)
     try {
-      const res = await api.patch(`/students/${id}/`, form)
+      const res = await api.patch('/students/' + id + '/', form)
       setStudent(res.data)
       setEditing(false)
       toast.success('Student updated!')
@@ -52,16 +62,12 @@ export default function StudentDetail() {
   const handleDelete = async () => {
     if (!window.confirm('Are you sure?')) return
     try {
-      await api.delete(`/students/${id}/`)
+      await api.delete('/students/' + id + '/')
       toast.success('Student deactivated')
       navigate('/students')
     } catch {
       toast.error('Delete failed')
     }
-  }
-
-  const handlePrint = () => {
-    navigate(`/students/${id}/print`)
   }
 
   if (loading) return <div className="p-8 text-blue-400 animate-pulse">Loading...</div>
@@ -85,7 +91,7 @@ export default function StudentDetail() {
             </>
           ) : (
             <>
-              <button onClick={handlePrint} className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm transition">
+              <button onClick={() => navigate('/students/' + id + '/print')} className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm transition">
                 <Printer size={15} /> Print
               </button>
               <button onClick={() => setEditing(true)} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm transition">
@@ -110,7 +116,7 @@ export default function StudentDetail() {
             </div>
             <div className="mt-3 text-center">
               <span className={`px-3 py-1 rounded-full text-xs font-semibold ${student.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                {student.is_active ? '● Active' : '● Inactive'}
+                {student.is_active ? 'Active' : 'Inactive'}
               </span>
             </div>
           </div>
@@ -118,13 +124,13 @@ export default function StudentDetail() {
           <div className="flex-1 grid grid-cols-3 gap-5">
             {editing ? (
               <>
-                <div><label className="text-slate-400 text-xs mb-1 block">Full Name</label><input value={form.full_name || ''} onChange={setField('full_name')} className={inputClass} /></div>
-                <div><label className="text-slate-400 text-xs mb-1 block">নাম (বাংলায়)</label><input value={form.name_bangla || ''} onChange={setField('name_bangla')} className={inputClass} /></div>
-                <div><label className="text-slate-400 text-xs mb-1 block">Phone</label><input value={form.phone || ''} onChange={setField('phone')} className={inputClass} /></div>
-                <div><label className="text-slate-400 text-xs mb-1 block">Roll</label><input value={form.roll || ''} onChange={setField('roll')} className={inputClass} /></div>
-                <div><label className="text-slate-400 text-xs mb-1 block">Date of Birth</label><input type="date" value={form.dob || ''} onChange={setField('dob')} className={inputClass} /></div>
-                <div><label className="text-slate-400 text-xs mb-1 block">Religion</label><input value={form.religion || ''} onChange={setField('religion')} className={inputClass} /></div>
-                <div><label className="text-slate-400 text-xs mb-1 block">Gender</label>
+                <div><label className={labelClass}>Full Name</label><input value={form.full_name || ''} onChange={setField('full_name')} className={inputClass} /></div>
+                <div><label className={labelClass}>ÃƒÂ Ã‚Â¦Ã‚Â¨ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã‚Â® (ÃƒÂ Ã‚Â¦Ã‚Â¬ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã¢â‚¬Å¡ÃƒÂ Ã‚Â¦Ã‚Â²ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã‚Â¯ÃƒÂ Ã‚Â¦Ã‚Â¼)</label><input value={form.name_bangla || ''} onChange={setField('name_bangla')} className={inputClass} /></div>
+                <div><label className={labelClass}>Phone</label><input value={form.phone || ''} onChange={setField('phone')} className={inputClass} /></div>
+                <div><label className={labelClass}>Roll</label><input value={form.roll || ''} onChange={setField('roll')} className={inputClass} /></div>
+                <div><label className={labelClass}>Date of Birth</label><input type="date" value={form.dob || ''} onChange={setField('dob')} className={inputClass} /></div>
+                <div><label className={labelClass}>Religion</label><input value={form.religion || ''} onChange={setField('religion')} className={inputClass} /></div>
+                <div><label className={labelClass}>Gender</label>
                   <select value={form.gender || ''} onChange={setField('gender')} className={inputClass}>
                     <option value="">Select</option>
                     <option value="male">Male</option>
@@ -132,28 +138,43 @@ export default function StudentDetail() {
                     <option value="other">Other</option>
                   </select>
                 </div>
-                <div><label className="text-slate-400 text-xs mb-1 block">Blood Group</label>
+                <div><label className={labelClass}>Blood Group</label>
                   <select value={form.blood_group || ''} onChange={setField('blood_group')} className={inputClass}>
                     <option value="">Select</option>
                     {['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(b => <option key={b} value={b}>{b}</option>)}
                   </select>
                 </div>
-                <div><label className="text-slate-400 text-xs mb-1 block">Birth Reg No</label><input value={form.birth_reg_no || ''} onChange={setField('birth_reg_no')} className={inputClass} /></div>
+                <div><label className={labelClass}>Birth Reg No</label><input value={form.birth_reg_no || ''} onChange={setField('birth_reg_no')} className={inputClass} /></div>
+                <div><label className={labelClass}>Class</label>
+                  <select value={form.class_name || ''} onChange={e => {
+                    setField('class_name')(e)
+                    api.get('/academics/sections/?class_id=' + e.target.value).then(r => setSections(r.data.results || []))
+                  }} className={inputClass}>
+                    <option value="">Select Class</option>
+                    {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div><label className={labelClass}>Section</label>
+                  <select value={form.section || ''} onChange={setField('section')} className={inputClass}>
+                    <option value="">Select Section</option>
+                    {sections.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </div>
               </>
             ) : (
               <>
                 <Field label="Full Name" value={student.full_name} />
-                <Field label="নাম (বাংলায়)" value={student.name_bangla} />
+                <Field label="ÃƒÂ Ã‚Â¦Ã‚Â¨ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã‚Â® (ÃƒÂ Ã‚Â¦Ã‚Â¬ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã¢â‚¬Å¡ÃƒÂ Ã‚Â¦Ã‚Â²ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã‚Â¯ÃƒÂ Ã‚Â¦Ã‚Â¼)" value={student.name_bangla} />
                 <Field label="Email" value={student.email} />
                 <Field label="Phone" value={student.phone} />
                 <Field label="Student ID" value={student.student_id} />
                 <Field label="Roll Number" value={student.roll} />
+                <Field label="Class" value={student.class_name_display} />
                 <Field label="Date of Birth" value={student.dob} />
                 <Field label="Gender" value={student.gender} />
                 <Field label="Blood Group" value={student.blood_group} />
                 <Field label="Religion" value={student.religion} />
                 <Field label="Birth Reg No" value={student.birth_reg_no} />
-                <Field label="Class" value={student.class_name_display} />
               </>
             )}
           </div>
@@ -162,12 +183,12 @@ export default function StudentDetail() {
 
       <div className="grid grid-cols-2 gap-6 mb-6">
         <div className="bg-[#1E293B] rounded-2xl border border-slate-700 p-6">
-          <h3 className="text-white font-semibold mb-4">👨 Father Info</h3>
+          <h3 className="text-white font-semibold mb-4">Father Info</h3>
           {editing ? (
             <div className="space-y-3">
-              <div><label className="text-slate-400 text-xs mb-1 block">Father Name</label><input value={form.father_name || ''} onChange={setField('father_name')} className={inputClass} /></div>
-              <div><label className="text-slate-400 text-xs mb-1 block">Mobile</label><input value={form.father_mobile || ''} onChange={setField('father_mobile')} className={inputClass} /></div>
-              <div><label className="text-slate-400 text-xs mb-1 block">NID</label><input value={form.father_nid || ''} onChange={setField('father_nid')} className={inputClass} /></div>
+              <div><label className={labelClass}>Father Name</label><input value={form.father_name || ''} onChange={setField('father_name')} className={inputClass} /></div>
+              <div><label className={labelClass}>Mobile</label><input value={form.father_mobile || ''} onChange={setField('father_mobile')} className={inputClass} /></div>
+              <div><label className={labelClass}>NID</label><input value={form.father_nid || ''} onChange={setField('father_nid')} className={inputClass} /></div>
             </div>
           ) : (
             <div className="space-y-3">
@@ -179,12 +200,12 @@ export default function StudentDetail() {
         </div>
 
         <div className="bg-[#1E293B] rounded-2xl border border-slate-700 p-6">
-          <h3 className="text-white font-semibold mb-4">👩 Mother Info</h3>
+          <h3 className="text-white font-semibold mb-4">Mother Info</h3>
           {editing ? (
             <div className="space-y-3">
-              <div><label className="text-slate-400 text-xs mb-1 block">Mother Name</label><input value={form.mother_name || ''} onChange={setField('mother_name')} className={inputClass} /></div>
-              <div><label className="text-slate-400 text-xs mb-1 block">Mobile</label><input value={form.mother_mobile || ''} onChange={setField('mother_mobile')} className={inputClass} /></div>
-              <div><label className="text-slate-400 text-xs mb-1 block">NID</label><input value={form.mother_nid || ''} onChange={setField('mother_nid')} className={inputClass} /></div>
+              <div><label className={labelClass}>Mother Name</label><input value={form.mother_name || ''} onChange={setField('mother_name')} className={inputClass} /></div>
+              <div><label className={labelClass}>Mobile</label><input value={form.mother_mobile || ''} onChange={setField('mother_mobile')} className={inputClass} /></div>
+              <div><label className={labelClass}>NID</label><input value={form.mother_nid || ''} onChange={setField('mother_nid')} className={inputClass} /></div>
             </div>
           ) : (
             <div className="space-y-3">
@@ -197,16 +218,16 @@ export default function StudentDetail() {
       </div>
 
       <div className="bg-[#1E293B] rounded-2xl border border-slate-700 p-6 mb-6">
-        <h3 className="text-white font-semibold mb-4">📍 Address</h3>
+        <h3 className="text-white font-semibold mb-4">Address</h3>
         {editing ? (
           <div className="grid grid-cols-2 gap-4">
-            <div><label className="text-slate-400 text-xs mb-1 block">Present Address</label><textarea value={form.present_address || ''} onChange={setField('present_address')} rows={3} className={inputClass} /></div>
-            <div><label className="text-slate-400 text-xs mb-1 block">Permanent Address</label><textarea value={form.permanent_address || ''} onChange={setField('permanent_address')} rows={3} className={inputClass} /></div>
+            <div><label className={labelClass}>Present Address</label><textarea value={form.present_address || ''} onChange={setField('present_address')} rows={3} className={inputClass} /></div>
+            <div><label className={labelClass}>Permanent Address</label><textarea value={form.permanent_address || ''} onChange={setField('permanent_address')} rows={3} className={inputClass} /></div>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-6">
-            <Field label="Present Address (বর্তমান ঠিকানা)" value={student.present_address} />
-            <Field label="Permanent Address (স্থায়ী ঠিকানা)" value={student.permanent_address} />
+            <Field label="Present Address" value={student.present_address} />
+            <Field label="Permanent Address" value={student.permanent_address} />
           </div>
         )}
       </div>

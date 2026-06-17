@@ -1,15 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Eye, ChevronRight, ChevronLeft, Upload } from 'lucide-react'
+import { Plus, Search, Eye, ChevronRight, ChevronLeft, Upload, Users, FileDown } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
+import StudentBulkUpload from '../../components/students/StudentBulkUpload'
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dr7c7wxaw/image/upload'
 const CLOUDINARY_PRESET = 'dv1zh1rc'
-
 const steps = ['Basic Info', 'Academic', 'Family Info', 'Address']
-
 const initialForm = {
   full_name: '', name_bangla: '', email: '', password: '',
   phone: '', student_id: '', roll: '', dob: '', birth_reg_no: '',
@@ -20,7 +19,6 @@ const initialForm = {
   guardian_name: '', guardian_mobile: '', guardian_relation: '',
   present_address: '', permanent_address: '',
 }
-
 const inputClass = "w-full bg-[#0F172A] border border-slate-600 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500"
 const labelClass = "text-slate-400 text-xs mb-1 block"
 
@@ -31,22 +29,24 @@ export default function Students() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [showModal, setShowModal] = useState(false)
+  const [showBulkModal, setShowBulkModal] = useState(false)
+  const [pdfLoading, setPdfLoading] = useState(false)
   const [step, setStep] = useState(0)
   const [classes, setClasses] = useState([])
   const [sections, setSections] = useState([])
-
-  useEffect(() => {
-    api.get('/academics/classes/').then(r => setClasses(r.data.results || []))
-  }, [])
   const [form, setForm] = useState(initialForm)
   const [submitting, setSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
   const navigate = useNavigate()
   const fileRef = useRef()
 
+  useEffect(() => {
+    api.get('/academics/classes/').then(r => setClasses(r.data.results || []))
+  }, [])
+
   const fetchStudents = async () => {
     try {
-      const res = await api.get(`/students/?search=${search}`)
+      const res = await api.get('/students/?search=' + search)
       setStudents(res.data.results || [])
     } catch { toast.error('Failed to load students') }
     finally { setLoading(false) }
@@ -82,20 +82,14 @@ export default function Students() {
       const json = await res.json()
       setForm(p => ({ ...p, photo: json.secure_url }))
       toast.success('Photo uploaded!')
-    } catch {
-      toast.error('Photo upload failed')
-    } finally { setUploading(false) }
+    } catch { toast.error('Photo upload failed') }
+    finally { setUploading(false) }
   }
 
   const handleSubmit = async () => {
     setSubmitting(true)
     try {
-      const payload = {
-        ...form,
-        dob: form.dob || null,
-        class_name: form.class_name || null,
-        section: form.section || null,
-      }
+      const payload = { ...form, dob: form.dob || null, class_name: form.class_name || null, section: form.section || null }
       await api.post('/students/', payload)
       toast.success('Student added successfully!')
       setShowModal(false)
@@ -106,6 +100,48 @@ export default function Students() {
     } finally { setSubmitting(false) }
   }
 
+  const handleIDCards = async () => {
+    setPdfLoading(true)
+    try {
+      const token = localStorage.getItem("access_token")
+      const res = await fetch("http://127.0.0.1:8000/api/students/id-cards/", {
+        method: "GET",
+        headers: { "Authorization": "Bearer " + token }
+      })
+      if (!res.ok) throw new Error("Failed")
+      const blob = await res.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "student_id_cards.pdf"
+      a.click()
+      window.URL.revokeObjectURL(url)
+      toast.success("ID Cards downloaded!")
+    } catch { toast.error("ID Card export failed") }
+    finally { setPdfLoading(false) }
+  }
+
+  const handleExportPDF = async () => {
+    setPdfLoading(true)
+    try {
+      const token = localStorage.getItem('access_token')
+      const res = await fetch('http://127.0.0.1:8000/api/students/pdf/', {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      if (!res.ok) throw new Error('Failed')
+      const blob = await res.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'student_list.pdf'
+      a.click()
+      window.URL.revokeObjectURL(url)
+      toast.success('PDF downloaded!')
+    } catch { toast.error('PDF export failed') }
+    finally { setPdfLoading(false) }
+  }
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
@@ -113,9 +149,26 @@ export default function Students() {
           <h1 className="text-2xl font-bold text-white">Students</h1>
           <p className="text-slate-400 text-sm mt-1">Manage all students</p>
         </div>
-        {!isStudent && <button onClick={openModal} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition">
-          <Plus size={16} /> Add Student
-        </button>}
+        {!isStudent && (
+          <div className="flex items-center gap-3">
+            <button onClick={handleIDCards} disabled={pdfLoading}
+              className="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition">
+              <Users size={16} />
+              {pdfLoading ? "Generating..." : "ID Cards PDF"}
+            </button>
+            <button onClick={handleExportPDF} disabled={pdfLoading}
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition">
+              <FileDown size={16} />
+              {pdfLoading ? 'Generating...' : 'Export PDF'}
+            </button>
+            <button onClick={() => setShowBulkModal(true)} className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition">
+              <Users size={16} /> Bulk Import
+            </button>
+            <button onClick={openModal} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition">
+              <Plus size={16} /> Add Student
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="relative mb-6">
@@ -164,13 +217,25 @@ export default function Students() {
                   </span>
                 </td>
                 <td className="px-4 py-4">
-                  <button onClick={() => navigate(`/students/${s.id}`)} className="p-2 hover:bg-blue-500/20 rounded-lg transition text-slate-400 hover:text-blue-400"><Eye size={15} /></button>
+                  <button onClick={() => navigate('/students/' + s.id)} className="p-2 hover:bg-blue-500/20 rounded-lg transition text-slate-400 hover:text-blue-400"><Eye size={15} /></button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {showBulkModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="font-bold text-gray-800">Bulk Student Import</h2>
+              <button onClick={() => setShowBulkModal(false)} className="text-gray-400 hover:text-gray-600 text-xl font-bold">x</button>
+            </div>
+            <StudentBulkUpload onSuccess={() => { fetchStudents(); setShowBulkModal(false); toast.success('Students imported!') }} />
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
@@ -187,34 +252,30 @@ export default function Students() {
                 ))}
               </div>
             </div>
-
             <div className="p-6">
               {step === 0 && (
                 <div className="grid grid-cols-2 gap-4">
-                  {/* Photo Upload */}
                   <div className="col-span-2 flex items-center gap-4">
                     <div className="w-20 h-20 rounded-full bg-slate-700 overflow-hidden flex items-center justify-center flex-shrink-0 border-2 border-slate-600">
-                      {form.photo ? <img src={form.photo} className="w-full h-full object-cover" alt="" /> : <span className="text-3xl text-slate-400">👤</span>}
+                      {form.photo ? <img src={form.photo} className="w-full h-full object-cover" alt="" /> : <span className="text-3xl text-slate-400">P</span>}
                     </div>
                     <div>
                       <label className={labelClass}>PP Size Photo</label>
                       <input type="file" accept="image/*" ref={fileRef} onChange={handlePhotoUpload} className="hidden" />
-                      <button type="button" onClick={() => fileRef.current.click()}
-                        disabled={uploading}
+                      <button type="button" onClick={() => fileRef.current.click()} disabled={uploading}
                         className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm transition disabled:opacity-50">
-                        <Upload size={14} />
-                        {uploading ? 'Uploading...' : 'Upload Photo'}
+                        <Upload size={14} />{uploading ? 'Uploading...' : 'Upload Photo'}
                       </button>
-                      {form.photo && <p className="text-green-400 text-xs mt-1">✅ Photo uploaded</p>}
+                      {form.photo && <p className="text-green-400 text-xs mt-1">Photo uploaded</p>}
                     </div>
                   </div>
-                  <div><label className={labelClass}>Full Name (English) *</label><input value={form.full_name} onChange={setField('full_name')} className={inputClass} /></div>
-                  <div><label className={labelClass}>নাম (বাংলায়)</label><input value={form.name_bangla} onChange={setField('name_bangla')} placeholder="বাংলায় নাম লিখুন" className={inputClass} /></div>
+                  <div><label className={labelClass}>Full Name *</label><input value={form.full_name} onChange={setField('full_name')} className={inputClass} /></div>
+                  <div><label className={labelClass}>Name Bangla</label><input value={form.name_bangla} onChange={setField('name_bangla')} className={inputClass} /></div>
                   <div><label className={labelClass}>Email *</label><input type="email" value={form.email} onChange={setField('email')} className={inputClass} /></div>
                   <div><label className={labelClass}>Password *</label><input type="password" value={form.password} onChange={setField('password')} className={inputClass} /></div>
                   <div><label className={labelClass}>Phone</label><input value={form.phone} onChange={setField('phone')} className={inputClass} /></div>
                   <div><label className={labelClass}>Date of Birth</label><input type="date" value={form.dob} onChange={setField('dob')} className={inputClass} /></div>
-                  <div><label className={labelClass}>Birth Registration No</label><input value={form.birth_reg_no} onChange={setField('birth_reg_no')} className={inputClass} /></div>
+                  <div><label className={labelClass}>Birth Reg No</label><input value={form.birth_reg_no} onChange={setField('birth_reg_no')} className={inputClass} /></div>
                   <div><label className={labelClass}>Gender</label>
                     <select value={form.gender} onChange={setField('gender')} className={inputClass}>
                       <option value="">Select</option>
@@ -232,13 +293,12 @@ export default function Students() {
                   <div><label className={labelClass}>Religion</label><input value={form.religion} onChange={setField('religion')} className={inputClass} /></div>
                 </div>
               )}
-
               {step === 1 && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClass}>Student ID (Auto)</label>
+                    <label className={labelClass}>Student ID</label>
                     <div className="flex gap-2">
-                      <input value={form.student_id} onChange={setField('student_id')} className={`flex-1 ${inputClass}`} />
+                      <input value={form.student_id} onChange={setField('student_id')} className={'flex-1 ' + inputClass} />
                       <button onClick={generateId} className="bg-blue-600 hover:bg-blue-700 text-white px-3 rounded-xl text-xs">Auto</button>
                     </div>
                   </div>
@@ -257,7 +317,6 @@ export default function Students() {
                   </div>
                 </div>
               )}
-
               {step === 2 && (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2 text-slate-300 text-sm font-semibold border-b border-slate-700 pb-2">Father Info</div>
@@ -268,23 +327,19 @@ export default function Students() {
                   <div><label className={labelClass}>Mother Name</label><input value={form.mother_name} onChange={setField('mother_name')} className={inputClass} /></div>
                   <div><label className={labelClass}>Mother Mobile</label><input value={form.mother_mobile} onChange={setField('mother_mobile')} className={inputClass} /></div>
                   <div><label className={labelClass}>Mother NID</label><input value={form.mother_nid} onChange={setField('mother_nid')} className={inputClass} /></div>
-                  <div className="col-span-2 text-slate-300 text-sm font-semibold border-b border-slate-700 pb-2 mt-2">Guardian (Optional)</div>
+                  <div className="col-span-2 text-slate-300 text-sm font-semibold border-b border-slate-700 pb-2 mt-2">Guardian</div>
                   <div><label className={labelClass}>Guardian Name</label><input value={form.guardian_name} onChange={setField('guardian_name')} className={inputClass} /></div>
                   <div><label className={labelClass}>Guardian Mobile</label><input value={form.guardian_mobile} onChange={setField('guardian_mobile')} className={inputClass} /></div>
                   <div><label className={labelClass}>Relation</label><input value={form.guardian_relation} onChange={setField('guardian_relation')} className={inputClass} /></div>
                 </div>
               )}
-
               {step === 3 && (
                 <div className="grid grid-cols-1 gap-4">
-                  <div><label className={labelClass}>Present Address (বর্তমান ঠিকানা)</label>
-                    <textarea value={form.present_address} onChange={setField('present_address')} rows={3} className={inputClass} /></div>
-                  <div><label className={labelClass}>Permanent Address (স্থায়ী ঠিকানা)</label>
-                    <textarea value={form.permanent_address} onChange={setField('permanent_address')} rows={3} className={inputClass} /></div>
+                  <div><label className={labelClass}>Present Address</label><textarea value={form.present_address} onChange={setField('present_address')} rows={3} className={inputClass} /></div>
+                  <div><label className={labelClass}>Permanent Address</label><textarea value={form.permanent_address} onChange={setField('permanent_address')} rows={3} className={inputClass} /></div>
                 </div>
               )}
             </div>
-
             <div className="p-6 border-t border-slate-700 flex justify-between">
               <button onClick={() => step === 0 ? setShowModal(false) : setStep(s => s - 1)}
                 className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-5 py-2.5 rounded-xl text-sm transition">
@@ -298,7 +353,7 @@ export default function Students() {
               ) : (
                 <button onClick={handleSubmit} disabled={submitting}
                   className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition">
-                  {submitting ? 'Saving...' : '✅ Save Student'}
+                  {submitting ? 'Saving...' : 'Save Student'}
                 </button>
               )}
             </div>

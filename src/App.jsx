@@ -28,6 +28,8 @@ import ParentReport from './pages/ai/ParentReport'
 import Settings from './pages/settings/Settings'
 import Accounting from './pages/accounting/Accounting'
 import Gallery from './pages/Gallery'
+import Timetable from './pages/timetable/Timetable'
+import ParentPortal from './pages/parent/ParentPortal'
 
 function Layout() {
   const { user, loading } = useAuth()
@@ -38,9 +40,11 @@ function Layout() {
   )
   if (!user) return <Navigate to="/login" />
   return (
-    <div className="flex min-h-screen bg-[#0F172A]">
-      <Sidebar />
-      <main className="flex-1 overflow-auto">
+    <div className="flex h-screen bg-[#0F172A] overflow-hidden">
+      <div className="flex-shrink-0 overflow-y-auto h-full">
+        <Sidebar />
+      </div>
+      <main className="flex-1 overflow-y-auto h-full">
         <Outlet />
       </main>
       <FloatingChatbot />
@@ -82,6 +86,8 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/accounting" element={<Accounting />} />
             <Route path="/gallery" element={<Gallery />} />
+            <Route path="/timetable" element={<Timetable />} />
+            <Route path="/parent-portal" element={<ParentPortal />} />
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>
         </Routes>
