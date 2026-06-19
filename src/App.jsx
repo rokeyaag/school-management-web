@@ -27,6 +27,7 @@ import FeeDefaulter from './pages/ai/FeeDefaulter'
 import ParentReport from './pages/ai/ParentReport'
 import Settings from './pages/settings/Settings'
 import Accounting from './pages/accounting/Accounting'
+import SalaryManagement from './pages/accounting/SalaryManagement'
 import Gallery from './pages/Gallery'
 import Timetable from './pages/timetable/Timetable'
 import ParentPortal from './pages/parent/ParentPortal'
@@ -85,6 +86,7 @@ function App() {
             <Route path="/parent-report" element={<ParentReport />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/accounting" element={<Accounting />} />
+            <Route path="/salary" element={<SalaryManagement />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/timetable" element={<Timetable />} />
             <Route path="/parent-portal" element={<ParentPortal />} />

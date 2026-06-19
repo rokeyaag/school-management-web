@@ -19,7 +19,7 @@ const initialForm = {
   guardian_name: '', guardian_mobile: '', guardian_relation: '',
   present_address: '', permanent_address: '',
 }
-const inputClass = "w-full bg-[#0F172A] border border-slate-600 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500"
+const inputClass = "w-full bg-[#0F172A] border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500"
 const labelClass = "text-slate-400 text-xs mb-1 block"
 
 export default function Students() {
@@ -204,10 +204,10 @@ export default function Students() {
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-4 text-slate-300 text-sm font-mono">{s.student_id}</td>
-                <td className="px-4 py-4 text-slate-300 text-sm">{s.roll || '-'}</td>
-                <td className="px-4 py-4 text-slate-300 text-sm">{s.class_name_display || '-'}</td>
-                <td className="px-4 py-4 text-slate-300 text-sm capitalize">{s.gender || '-'}</td>
+                <td className="px-4 py-4 text-white text-sm font-mono">{s.student_id}</td>
+                <td className="px-4 py-4 text-white text-sm">{s.roll || '-'}</td>
+                <td className="px-4 py-4 text-white text-sm">{s.class_name_display || '-'}</td>
+                <td className="px-4 py-4 text-white text-sm capitalize">{s.gender || '-'}</td>
                 <td className="px-4 py-4">
                   {s.blood_group ? <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded-lg text-xs font-bold">{s.blood_group}</span> : '-'}
                 </td>
@@ -227,10 +227,10 @@ export default function Students() {
 
       {showBulkModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#1E293B] rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="font-bold text-gray-800">Bulk Student Import</h2>
-              <button onClick={() => setShowBulkModal(false)} className="text-gray-400 hover:text-gray-600 text-xl font-bold">x</button>
+              <button onClick={() => setShowBulkModal(false)} className="text-white hover:text-gray-600 text-xl font-bold">x</button>
             </div>
             <StudentBulkUpload onSuccess={() => { fetchStudents(); setShowBulkModal(false); toast.success('Students imported!') }} />
           </div>
@@ -256,7 +256,7 @@ export default function Students() {
               {step === 0 && (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2 flex items-center gap-4">
-                    <div className="w-20 h-20 rounded-full bg-slate-700 overflow-hidden flex items-center justify-center flex-shrink-0 border-2 border-slate-600">
+                    <div className="w-20 h-20 rounded-full bg-slate-700 overflow-hidden flex items-center justify-center flex-shrink-0 border-2 border-slate-700">
                       {form.photo ? <img src={form.photo} className="w-full h-full object-cover" alt="" /> : <span className="text-3xl text-slate-400">P</span>}
                     </div>
                     <div>
@@ -319,15 +319,15 @@ export default function Students() {
               )}
               {step === 2 && (
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2 text-slate-300 text-sm font-semibold border-b border-slate-700 pb-2">Father Info</div>
+                  <div className="col-span-2 text-white text-sm font-semibold border-b border-slate-700 pb-2">Father Info</div>
                   <div><label className={labelClass}>Father Name</label><input value={form.father_name} onChange={setField('father_name')} className={inputClass} /></div>
                   <div><label className={labelClass}>Father Mobile</label><input value={form.father_mobile} onChange={setField('father_mobile')} className={inputClass} /></div>
                   <div><label className={labelClass}>Father NID</label><input value={form.father_nid} onChange={setField('father_nid')} className={inputClass} /></div>
-                  <div className="col-span-2 text-slate-300 text-sm font-semibold border-b border-slate-700 pb-2 mt-2">Mother Info</div>
+                  <div className="col-span-2 text-white text-sm font-semibold border-b border-slate-700 pb-2 mt-2">Mother Info</div>
                   <div><label className={labelClass}>Mother Name</label><input value={form.mother_name} onChange={setField('mother_name')} className={inputClass} /></div>
                   <div><label className={labelClass}>Mother Mobile</label><input value={form.mother_mobile} onChange={setField('mother_mobile')} className={inputClass} /></div>
                   <div><label className={labelClass}>Mother NID</label><input value={form.mother_nid} onChange={setField('mother_nid')} className={inputClass} /></div>
-                  <div className="col-span-2 text-slate-300 text-sm font-semibold border-b border-slate-700 pb-2 mt-2">Guardian</div>
+                  <div className="col-span-2 text-white text-sm font-semibold border-b border-slate-700 pb-2 mt-2">Guardian</div>
                   <div><label className={labelClass}>Guardian Name</label><input value={form.guardian_name} onChange={setField('guardian_name')} className={inputClass} /></div>
                   <div><label className={labelClass}>Guardian Mobile</label><input value={form.guardian_mobile} onChange={setField('guardian_mobile')} className={inputClass} /></div>
                   <div><label className={labelClass}>Relation</label><input value={form.guardian_relation} onChange={setField('guardian_relation')} className={inputClass} /></div>
