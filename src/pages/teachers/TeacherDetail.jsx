@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Pencil, Trash2, Save, X, Printer, Upload } from 'lucide-react'
-import { useRef } from 'react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 
@@ -22,6 +21,9 @@ export default function TeacherDetail() {
   const [teacher, setTeacher] = useState(null)
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [form, setForm] = useState({})
+  const [saving, setSaving] = useState(false)
   const fileRef = useRef()
 
   const handlePhotoUpload = async (e) => {
@@ -39,9 +41,6 @@ export default function TeacherDetail() {
     } catch { toast.error('Upload failed') }
     finally { setUploading(false) }
   }
-  const [editing, setEditing] = useState(false)
-  const [form, setForm] = useState({})
-  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     api.get(`/teachers/${id}/`).then(res => {

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import api from '../../api/axiosConfig'
 
@@ -11,7 +11,7 @@ export default function StudentPrint() {
     api.get(`/students/${id}/`).then(res => {
       setStudent(res.data)
       setTimeout(() => window.print(), 500)
-    })
+    }).catch(() => {})
   }, [id])
 
   if (!student) return <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'100vh',fontFamily:'Arial'}}>Loading...</div>
@@ -154,7 +154,7 @@ export default function StudentPrint() {
 
         {/* Guardian */}
         <div style={{padding:'10px 16px', borderBottom:'1px solid #ddd'}}>
-          <div style={{fontSize:'10px', color:'#666', marginBottom:'6px', fontWeight:'700', color:'#1e3a8a'}}>অভিভাবকের তথ্য — Guardian Information</div>
+          <div style={{fontSize:'10px', marginBottom:'6px', fontWeight:'700', color:'#1e3a8a'}}>অভিভাবকের তথ্য — Guardian Information</div>
           <div style={{display:'flex', gap:'0', border:'1px solid #ddd', borderRight:'none'}}>
             <div style={{flex:2, padding:'6px 10px', borderRight:'1px solid #ddd'}}>
               <div style={{fontSize:'9px', color:'#666'}}>Guardian Name</div>

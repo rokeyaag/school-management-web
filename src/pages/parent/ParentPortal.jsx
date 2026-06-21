@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { GraduationCap, ClipboardCheck, CreditCard, Bell, TrendingUp, BookOpen, User } from 'lucide-react'
+import { GraduationCap, ClipboardCheck, Bell, BookOpen, User } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 import { useAuth } from '../../context/AuthContext'
@@ -12,14 +12,14 @@ export default function ParentPortal() {
   const [activeTab, setActiveTab] = useState('overview')
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchData = async () => {
       try {
         const res = await api.get('/auth/parent/dashboard/')
         setData(res.data)
       } catch { toast.error('Failed to load data') }
       finally { setLoading(false) }
     }
-    fetch()
+    fetchData()
   }, [])
 
   if (loading) return <div className="p-8 text-blue-400 animate-pulse">Loading...</div>

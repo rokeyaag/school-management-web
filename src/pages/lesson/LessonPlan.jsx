@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Brain, Loader, BookOpen, Download } from 'lucide-react'
+import { Brain, Loader, BookOpen, Copy } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 
@@ -87,7 +87,7 @@ export default function LessonPlan() {
             {plan && (
               <button onClick={handleCopy}
                 className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-xl text-xs transition">
-                <Download size={12} /> Copy
+                <Copy size={12} /> Copy
               </button>
             )}
           </div>

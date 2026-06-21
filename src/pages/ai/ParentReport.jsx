@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FileText, Brain, Loader, Copy, Printer, User } from 'lucide-react'
+import { FileText, Brain, Loader, Copy, Printer } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 

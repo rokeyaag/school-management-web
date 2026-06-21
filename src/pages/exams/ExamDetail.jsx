@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Plus, Save, CheckCircle, XCircle, Brain, Loader } from 'lucide-react'
+import { ArrowLeft, Save, CheckCircle, XCircle, Brain, Loader } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 

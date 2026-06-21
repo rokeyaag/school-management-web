@@ -9,7 +9,10 @@ export default function QuestionGenerator() {
   const [loading, setLoading] = useState(false)
   const [lang, setLang] = useState('en')
 
-  const setField = (field) => (e) => setForm(p => ({ ...p, [field]: e.target.value }))
+  const setField = (field) => (e) => {
+    const val = ['num_mcq', 'num_short'].includes(field) ? Number(e.target.value) : e.target.value
+    setForm(p => ({ ...p, [field]: val }))
+  }
 
   const handleGenerate = async () => {
     if (!form.subject || !form.topic) return toast.error('Subject and Topic required!')

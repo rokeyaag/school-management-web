@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Brain, Loader, Activity, TrendingUp, Users, BookOpen, CreditCard, Bell } from 'lucide-react'
+import { Brain, Loader, Activity, Users, CreditCard, Bell } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 

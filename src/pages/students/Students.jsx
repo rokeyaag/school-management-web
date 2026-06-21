@@ -103,14 +103,8 @@ export default function Students() {
   const handleIDCards = async () => {
     setPdfLoading(true)
     try {
-      const token = localStorage.getItem("access_token")
-      const res = await fetch("http://127.0.0.1:8000/api/students/id-cards/", {
-        method: "GET",
-        headers: { "Authorization": "Bearer " + token }
-      })
-      if (!res.ok) throw new Error("Failed")
-      const blob = await res.blob()
-      const url = window.URL.createObjectURL(blob)
+      const res = await api.get('/students/id-cards/', { responseType: 'blob' })
+      const url = window.URL.createObjectURL(res.data)
       const a = document.createElement("a")
       a.href = url
       a.download = "student_id_cards.pdf"
@@ -124,14 +118,8 @@ export default function Students() {
   const handleExportPDF = async () => {
     setPdfLoading(true)
     try {
-      const token = localStorage.getItem('access_token')
-      const res = await fetch('http://127.0.0.1:8000/api/students/pdf/', {
-        method: 'GET',
-        headers: { 'Authorization': 'Bearer ' + token }
-      })
-      if (!res.ok) throw new Error('Failed')
-      const blob = await res.blob()
-      const url = window.URL.createObjectURL(blob)
+      const res = await api.get('/students/pdf/', { responseType: 'blob' })
+      const url = window.URL.createObjectURL(res.data)
       const a = document.createElement('a')
       a.href = url
       a.download = 'student_list.pdf'
@@ -229,8 +217,8 @@ export default function Students() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-[#1E293B] rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="font-bold text-gray-800">Bulk Student Import</h2>
-              <button onClick={() => setShowBulkModal(false)} className="text-white hover:text-gray-600 text-xl font-bold">x</button>
+              <h2 className="font-bold text-white">Bulk Student Import</h2>
+              <button onClick={() => setShowBulkModal(false)} className="text-slate-400 hover:text-white text-xl font-bold">x</button>
             </div>
             <StudentBulkUpload onSuccess={() => { fetchStudents(); setShowBulkModal(false); toast.success('Students imported!') }} />
           </div>

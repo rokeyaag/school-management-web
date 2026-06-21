@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Brain, TrendingUp, TrendingDown, User, MessageSquare, Send, Bot, Loader } from 'lucide-react'
+import { Brain, TrendingUp, TrendingDown, User, Send, Bot, Loader } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 
@@ -54,13 +54,6 @@ export default function AIInsights() {
     if (avg >= 60) return 'text-blue-400'
     if (avg >= 40) return 'text-yellow-400'
     return 'text-red-400'
-  }
-
-  const getGradeBg = (avg) => {
-    if (avg >= 80) return 'bg-green-500/20'
-    if (avg >= 60) return 'bg-blue-500/20'
-    if (avg >= 40) return 'bg-yellow-500/20'
-    return 'bg-red-500/20'
   }
 
   return (

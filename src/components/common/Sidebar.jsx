@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import api from '../../api/axiosConfig'
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen,
-  ClipboardCheck, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity, FileQuestion, TrendingDown, Settings, AlertCircle, Calculator, FileText, Wallet, Images, ChevronDown, BookOpenCheck
+  ClipboardCheck, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity, FileQuestion, TrendingDown, Settings, AlertCircle, Calculator, FileText, Wallet, Images, ChevronDown, BookOpenCheck, Brain
 } from 'lucide-react'
 
 const navItems = [
@@ -16,6 +16,7 @@ const navItems = [
   { to: '/fees', icon: CreditCard, label: 'Payments' },
   { to: '/accounting', icon: Calculator, label: 'Accounting' },
   { to: '/salary', icon: Wallet, label: 'Salary' },
+  { to: '/ai-financial-reports', icon: Brain, label: 'AI Finance' },
   { to: '/notices', icon: Bell, label: 'Notices', badge: true },
   { to: '/ai', icon: Bot, label: 'AI Insights' },
   { to: '/lesson-plan', icon: BookMarked, label: 'Lesson Plan' },
@@ -35,11 +36,11 @@ const navItems = [
 
 const GROUP_LABELS = [
   { key: 'main', label: 'Main', items: ['/dashboard'] },
-  { key: 'academic', label: 'Academic', items: ['/students', '/teachers', '/attendance', '/exams'] },
-  { key: 'finance', label: 'Finance', items: ['/fees', '/accounting', '/salary'] },
+  { key: 'academic', label: 'Academic', items: ['/students', '/teachers', '/attendance', '/exams', '/timetable'] },
+  { key: 'finance', label: 'Finance', items: ['/fees', '/accounting', '/salary', '/ai-financial-reports'] },
   { key: 'comm', label: 'Communication', items: ['/notices'] },
   { key: 'ai', label: 'AI Features', items: ['/ai', '/lesson-plan', '/study-recommendation', '/question-generator', '/attendance-predictor', '/fee-defaulter', '/parent-report', '/school-health', '/textbook-ai'] },
-  { key: 'system', label: 'System', items: ['/admin-panel', '/gallery', '/settings'] },
+  { key: 'system', label: 'System', items: ['/admin-panel', '/parent-portal', '/gallery', '/settings'] },
 ]
 
 export default function Sidebar() {
@@ -115,7 +116,6 @@ export default function Sidebar() {
           const items = getGroupItems(group.items)
           if (items.length === 0) return null
           const isOpen = openGroups[group.key]
-          const hasActive = items.some(item => item.to === location.pathname)
           return (
             <div key={group.key} style={{ marginBottom: 4, animation: `fadeInLeft 0.4s ease ${gi * 50}ms both` }}>
               <button onClick={() => toggleGroup(group.key)} className="group-header"

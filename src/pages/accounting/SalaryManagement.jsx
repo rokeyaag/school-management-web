@@ -40,6 +40,7 @@ export default function SalaryManagement() {
         payment_date: new Date().toISOString().split('T')[0],
       })
       toast.success(`Salary paid for ${teacher.name}!`)
+      setEditForm(p => { const next = { ...p }; delete next[teacher.id]; return next })
       fetchAll()
     } catch { toast.error('Failed to save') }
   }
@@ -64,10 +65,10 @@ export default function SalaryManagement() {
           </div>
         </div>
         <div className="flex gap-2">
-          <select value={month} onChange={e => setMonth(e.target.value)} className="bg-[#1e293b] text-white rounded-lg px-3 py-2 text-sm border border-slate-600">
+          <select value={month} onChange={e => setMonth(Number(e.target.value))} className="bg-[#1e293b] text-white rounded-lg px-3 py-2 text-sm border border-slate-600">
             {['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map((m,i) => <option key={i} value={i+1}>{m}</option>)}
           </select>
-          <select value={year} onChange={e => setYear(e.target.value)} className="bg-[#1e293b] text-white rounded-lg px-3 py-2 text-sm border border-slate-600">
+          <select value={year} onChange={e => setYear(Number(e.target.value))} className="bg-[#1e293b] text-white rounded-lg px-3 py-2 text-sm border border-slate-600">
             {[2024,2025,2026].map(y => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>
@@ -103,7 +104,7 @@ export default function SalaryManagement() {
                 <input
                   type="text" inputMode="numeric"
                   placeholder="Amount"
-                  defaultValue={sal?.amount ?? t.salary}
+                  value={editForm[t.id]?.amount ?? sal?.amount ?? t.salary ?? ''}
                   onChange={e => setEditForm(p => ({ ...p, [t.id]: { ...p[t.id], amount: e.target.value } }))}
                   className="w-28 bg-[#1e293b] text-white text-sm rounded-lg px-3 py-1.5 border border-slate-600 mr-3 focus:outline-none focus:border-emerald-500"
                 />

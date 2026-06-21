@@ -11,7 +11,7 @@ export default function TeacherPrint() {
     api.get(`/teachers/${id}/`).then(res => {
       setTeacher(res.data)
       setTimeout(() => window.print(), 500)
-    })
+    }).catch(() => {})
   }, [id])
 
   if (!teacher) return <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'100vh',fontFamily:'Arial'}}>Loading...</div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { BookOpenCheck, X, Send, Loader, Sparkles } from 'lucide-react'
 import api from '../../api/axiosConfig'
 
@@ -12,6 +12,11 @@ export default function FloatingTextbookAI() {
   const [chatHistory, setChatHistory] = useState([
     { role: 'assistant', content: 'Hi! Ask me anything from your uploaded textbooks.' }
   ])
+  const bottomRef = useRef(null)
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [chatHistory, open])
 
   useEffect(() => {
     if (open) {
@@ -86,6 +91,7 @@ export default function FloatingTextbookAI() {
                 </div>
               </div>
             )}
+            <div ref={bottomRef} />
           </div>
 
           <div className="p-3 border-t border-slate-700 flex gap-2">

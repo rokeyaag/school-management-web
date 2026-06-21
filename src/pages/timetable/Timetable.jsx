@@ -4,7 +4,6 @@ import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 
 const DAYS = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday']
-const DAY_LABELS = { saturday: 'Sat', sunday: 'Sun', monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed', thursday: 'Thu' }
 const DAY_COLORS = {
   saturday: '#7c3aed', sunday: '#0891b2', monday: '#059669',
   tuesday: '#d97706', wednesday: '#db2777', thursday: '#4f46e5'
@@ -45,7 +44,7 @@ export default function Timetable() {
     setLoading(true)
     try {
       const res = await api.get('/academics/timetable/?section_id=' + selectedSection)
-      setTimetable(res.data)
+      setTimetable(res.data.results || res.data)
     } catch { toast.error('Failed to load timetable') }
     finally { setLoading(false) }
   }

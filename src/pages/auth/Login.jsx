@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { Eye, EyeOff, School, Mail, Lock, User, Phone, Building } from 'lucide-react'
 import api from '../../api/axiosConfig'
-import axios from 'axios'
 import toast from 'react-hot-toast'
 
 const inputClass = "w-full bg-[#0F172A] border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition pl-11"
@@ -12,7 +11,6 @@ export default function Login() {
   const [tab, setTab] = useState('login')
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
 
@@ -38,7 +36,7 @@ export default function Login() {
     if (regForm.password !== regForm.confirm_password) return toast.error('Passwords do not match')
     setLoading(true)
     try {
-      await axios.post('http://localhost:8000/api/tenants/register/', regForm)
+      await api.post('/tenants/register/', regForm)
       toast.success('Registration successful! Please login.')
       setTab('login')
     } catch (err) {
@@ -108,12 +106,7 @@ export default function Login() {
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 accent-blue-600" />
-                  <span className="text-slate-400 text-sm">Remember me</span>
-                </label>
+              <div className="flex items-center justify-end">
                 <button type="button" onClick={() => setTab('forgot')}
                   className="text-blue-400 text-sm hover:underline">Forgot password?</button>
               </div>

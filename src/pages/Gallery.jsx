@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Images, Plus, Trash2, Upload, X, ArrowLeft, Image, Eye } from "lucide-react";
 import api from "../api/axiosConfig";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 export default function Gallery() {
   const { user } = useAuth();
@@ -24,7 +25,7 @@ export default function Gallery() {
       setLoading(true);
       const res = await api.get("/gallery/albums/");
       setAlbums(res.data.results || res.data);
-    } catch (e) { console.error(e); }
+    } catch { toast.error("Failed to load albums"); }
     finally { setLoading(false); }
   };
 
@@ -32,7 +33,7 @@ export default function Gallery() {
     try {
       const res = await api.get(`/gallery/albums/${id}/`);
       setSelectedAlbum(res.data);
-    } catch (e) { console.error(e); }
+    } catch { toast.error("Failed to load album"); }
   };
 
   const createAlbum = async () => {
@@ -42,16 +43,16 @@ export default function Gallery() {
       setNewAlbum({ title: "", description: "" });
       setShowCreateModal(false);
       fetchAlbums();
-    } catch (e) { console.error(e); }
+    } catch { toast.error("Failed to create album"); }
   };
 
   const deleteAlbum = async (id) => {
-    if (!confirm("এই album মুছে ফেলবেন?")) return;
+    if (!window.confirm("এই album মুছে ফেলবেন?")) return;
     try {
       await api.delete(`/gallery/albums/${id}/`);
       setSelectedAlbum(null);
       fetchAlbums();
-    } catch (e) { console.error(e); }
+    } catch { toast.error("Failed to delete album"); }
   };
 
   const uploadPhoto = async () => {
@@ -67,16 +68,16 @@ export default function Gallery() {
       setUploadData({ image: null, caption: "" });
       setShowUploadModal(false);
       fetchAlbum(selectedAlbum.id);
-    } catch (e) { console.error(e); }
+    } catch { toast.error("Failed to upload photo"); }
     finally { setUploading(false); }
   };
 
   const deletePhoto = async (photoId) => {
-    if (!confirm("এই photo মুছে ফেলবেন?")) return;
+    if (!window.confirm("এই photo মুছে ফেলবেন?")) return;
     try {
       await api.delete(`/gallery/albums/photos/${photoId}/delete/`);
       fetchAlbum(selectedAlbum.id);
-    } catch (e) { console.error(e); }
+    } catch { toast.error("Failed to delete photo"); }
   };
 
   const openLightbox = (photo, index) => { setLightboxPhoto(photo); setLightboxIndex(index); };

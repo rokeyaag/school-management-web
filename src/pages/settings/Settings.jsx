@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { useAuth } from '../../context/AuthContext'
 
 export default function Settings() {
-  const { user, setUser } = useAuth()
+  const { user } = useAuth()
   const [tab, setTab] = useState('profile')
   const [loading, setLoading] = useState(false)
   const [showOld, setShowOld] = useState(false)
@@ -102,7 +102,7 @@ export default function Settings() {
           <div className="flex items-center gap-4 mb-2">
             <div className="relative">
               <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden">
-                {profile.avatar ? <img src={profile.avatar} className="w-full h-full object-cover" /> : <span className="text-white text-2xl font-bold">{profile.full_name?.charAt(0)?.toUpperCase()}</span>}
+                {profile.avatar ? <img src={profile.avatar} className="w-full h-full object-cover" alt="Avatar" /> : <span className="text-white text-2xl font-bold">{profile.full_name?.charAt(0)?.toUpperCase()}</span>}
               </div>
               <button onClick={() => avatarRef.current.click()} className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                 <Camera size={12} className="text-white" />
@@ -172,7 +172,7 @@ export default function Settings() {
           <div className="flex items-center gap-4 mb-2">
             <div className="relative">
               <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-700 flex items-center justify-center">
-                {school.logo ? <img src={school.logo} className="w-full h-full object-cover" /> : <School size={24} className="text-gray-400" />}
+                {school.logo ? <img src={school.logo} className="w-full h-full object-cover" alt="School logo" /> : <School size={24} className="text-gray-400" />}
               </div>
               <button onClick={() => logoRef.current.click()} className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                 <Camera size={12} className="text-white" />

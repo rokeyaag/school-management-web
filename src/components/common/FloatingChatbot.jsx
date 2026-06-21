@@ -32,6 +32,7 @@ export default function FloatingChatbot() {
     recognition.onerror = () => setListening(false)
     recognition.onend = () => setListening(false)
     recognitionRef.current = recognition
+    return () => { recognition.abort?.() }
   }, [lang])
 
   const toggleListening = () => {

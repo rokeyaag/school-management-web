@@ -1,21 +1,22 @@
 import { useState, useEffect } from 'react'
-import { CheckCircle, XCircle, Building, Users, Clock, Shield } from 'lucide-react'
+import { CheckCircle, XCircle, Building, Shield } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 
 export default function AdminPanel() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const navigate = useNavigate()
   const [schools, setSchools] = useState([])
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState('pending')
 
   useEffect(() => {
+    if (authLoading) return
     if (user?.role !== 'super_admin') { navigate('/dashboard'); return }
     fetchSchools()
-  }, [])
+  }, [authLoading, user])
 
   const fetchSchools = async () => {
     try {

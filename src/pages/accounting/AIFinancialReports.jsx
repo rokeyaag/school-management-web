@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { TrendingUp, PieChart, Wallet, Brain, Loader, Printer, Copy } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
@@ -58,10 +58,10 @@ export default function AIFinancialReports() {
       </div>
 
       <div className="flex gap-3 mb-6 print:hidden">
-        <select value={month} onChange={e => setMonth(e.target.value)} className="bg-[#1e293b] text-white rounded-lg px-3 py-2 text-sm border border-slate-600">
+        <select value={month} onChange={e => setMonth(Number(e.target.value))} className="bg-[#1e293b] text-white rounded-lg px-3 py-2 text-sm border border-slate-600">
           {['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map((m,i) => <option key={i} value={i+1}>{m}</option>)}
         </select>
-        <select value={year} onChange={e => setYear(e.target.value)} className="bg-[#1e293b] text-white rounded-lg px-3 py-2 text-sm border border-slate-600">
+        <select value={year} onChange={e => setYear(Number(e.target.value))} className="bg-[#1e293b] text-white rounded-lg px-3 py-2 text-sm border border-slate-600">
           {[2024,2025,2026].map(y => <option key={y} value={y}>{y}</option>)}
         </select>
       </div>

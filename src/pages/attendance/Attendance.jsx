@@ -16,7 +16,6 @@ export default function Attendance() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [stats, setStats] = useState({ total: 0, marked: 0 })
 
   const fetchData = async () => {
     setLoading(true)
@@ -27,11 +26,10 @@ export default function Attendance() {
       ])
       const studentList = studentsRes.data.results || []
       setStudents(studentList)
-      setStats({ total: attRes.data.total_students, marked: attRes.data.marked })
 
       const attMap = {}
       studentList.forEach(s => { attMap[s.id] = 'present' })
-      attRes.data.results.forEach(a => { attMap[a.student] = a.status })
+      ;(attRes.data.results || []).forEach(a => { attMap[a.student] = a.status })
       setAttendance(attMap)
     } catch { toast.error('Failed to load') }
     finally { setLoading(false) }

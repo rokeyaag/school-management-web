@@ -18,13 +18,10 @@ export default function TextbookAI() {
   const [uploadMode, setUploadMode] = useState('text')
   const [imageFile, setImageFile] = useState(null)
   const [imageTitle, setImageTitle] = useState('')
-  const [imgFile, setImgFile] = useState(null)
-  const [imgTitle, setImgTitle] = useState('')
   const [query, setQuery] = useState('')
   const [asking, setAsking] = useState(false)
   const [chatHistory, setChatHistory] = useState([])
   const [viewDoc, setViewDoc] = useState(null)
-  const [viewLoading, setViewLoading] = useState(false)
   const [listening, setListening] = useState(false)
   const recognitionRef = useRef(null)
 
@@ -54,6 +51,7 @@ export default function TextbookAI() {
     recognition.onerror = () => setListening(false)
     recognition.onend = () => setListening(false)
     recognitionRef.current = recognition
+    return () => { recognition.abort?.() }
   }, [lang])
 
   const toggleListening = () => {
@@ -107,12 +105,10 @@ export default function TextbookAI() {
   }
 
   const viewDocument = async (id) => {
-    setViewLoading(true)
     try {
       const res = await api.get(`/knowledge-base/documents/${id}/`)
       setViewDoc(res.data)
     } catch { toast.error('Failed to load content') }
-    finally { setViewLoading(false) }
   }
 
   const uploadScannedPdf = async () => {
@@ -148,8 +144,8 @@ export default function TextbookAI() {
       const res = await api.post('/knowledge-base/upload-image/', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
       toast.success('Image text extracted and indexed! ' + res.data.chunk_count + ' chunks created')
       setShowUploadForm(false)
-      setImgFile(null)
-      setImgTitle('')
+      setImageFile(null)
+      setImageTitle('')
       fetchAll()
     } catch (e) { toast.error(e.response?.data?.error || 'Image upload failed') }
     finally { setUploading(false) }

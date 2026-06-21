@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Pencil, Trash2, Save, X, Printer, BookOpen } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, Save, X, Printer } from 'lucide-react'
 import api from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 
@@ -125,7 +125,7 @@ export default function StudentDetail() {
             {editing ? (
               <>
                 <div><label className={labelClass}>Full Name</label><input value={form.full_name || ''} onChange={setField('full_name')} className={inputClass} /></div>
-                <div><label className={labelClass}>ÃƒÂ Ã‚Â¦Ã‚Â¨ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã‚Â® (ÃƒÂ Ã‚Â¦Ã‚Â¬ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã¢â‚¬Å¡ÃƒÂ Ã‚Â¦Ã‚Â²ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã‚Â¯ÃƒÂ Ã‚Â¦Ã‚Â¼)</label><input value={form.name_bangla || ''} onChange={setField('name_bangla')} className={inputClass} /></div>
+                <div><label className={labelClass}>Name (Bangla)</label><input value={form.name_bangla || ''} onChange={setField('name_bangla')} className={inputClass} /></div>
                 <div><label className={labelClass}>Phone</label><input value={form.phone || ''} onChange={setField('phone')} className={inputClass} /></div>
                 <div><label className={labelClass}>Roll</label><input value={form.roll || ''} onChange={setField('roll')} className={inputClass} /></div>
                 <div><label className={labelClass}>Date of Birth</label><input type="date" value={form.dob || ''} onChange={setField('dob')} className={inputClass} /></div>
@@ -164,7 +164,7 @@ export default function StudentDetail() {
             ) : (
               <>
                 <Field label="Full Name" value={student.full_name} />
-                <Field label="ÃƒÂ Ã‚Â¦Ã‚Â¨ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã‚Â® (ÃƒÂ Ã‚Â¦Ã‚Â¬ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã¢â‚¬Å¡ÃƒÂ Ã‚Â¦Ã‚Â²ÃƒÂ Ã‚Â¦Ã‚Â¾ÃƒÂ Ã‚Â¦Ã‚Â¯ÃƒÂ Ã‚Â¦Ã‚Â¼)" value={student.name_bangla} />
+                <Field label="Name (Bangla)" value={student.name_bangla} />
                 <Field label="Email" value={student.email} />
                 <Field label="Phone" value={student.phone} />
                 <Field label="Student ID" value={student.student_id} />
