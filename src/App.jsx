@@ -3,6 +3,8 @@ import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Sidebar from './components/common/Sidebar'
 import FloatingChatbot from './components/common/FloatingChatbot'
+import FloatingTextbookAI from './components/common/FloatingTextbookAI'
+import TextbookAI from './pages/knowledge/TextbookAI'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
 import Students from './pages/students/Students'
@@ -49,6 +51,7 @@ function Layout() {
         <Outlet />
       </main>
       <FloatingChatbot />
+      <FloatingTextbookAI />
     </div>
   )
 }
@@ -86,7 +89,7 @@ function App() {
             <Route path="/parent-report" element={<ParentReport />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/accounting" element={<Accounting />} />
-            <Route path="/salary" element={<SalaryManagement />} />
+            <Route path="/salary" element={<SalaryManagement />} /><Route path="/textbook-ai" element={<TextbookAI />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/timetable" element={<Timetable />} />
             <Route path="/parent-portal" element={<ParentPortal />} />

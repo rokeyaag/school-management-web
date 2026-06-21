@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import api from '../../api/axiosConfig'
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen,
-  ClipboardCheck, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity, FileQuestion, TrendingDown, Settings, AlertCircle, Calculator, FileText, Wallet, Images, ChevronDown
+  ClipboardCheck, CreditCard, Bell, Bot, LogOut, Shield, BookMarked, Target, Activity, FileQuestion, TrendingDown, Settings, AlertCircle, Calculator, FileText, Wallet, Images, ChevronDown, BookOpenCheck
 } from 'lucide-react'
 
 const navItems = [
@@ -24,6 +24,7 @@ const navItems = [
   { to: '/attendance-predictor', icon: TrendingDown, label: 'Attendance AI' },
   { to: '/fee-defaulter', icon: AlertCircle, label: 'Fee Alert' },
   { to: '/parent-report', icon: FileText, label: 'Parent Report' },
+  { to: '/textbook-ai', icon: BookOpenCheck, label: 'Textbook AI' },
   { to: '/school-health', icon: Activity, label: 'School Health', role: 'super_admin' },
   { to: '/admin-panel', icon: Shield, label: 'Admin Panel', role: 'super_admin' },
   { to: '/timetable', icon: LayoutDashboard, label: 'Timetable' },
@@ -37,7 +38,7 @@ const GROUP_LABELS = [
   { key: 'academic', label: 'Academic', items: ['/students', '/teachers', '/attendance', '/exams'] },
   { key: 'finance', label: 'Finance', items: ['/fees', '/accounting', '/salary'] },
   { key: 'comm', label: 'Communication', items: ['/notices'] },
-  { key: 'ai', label: 'AI Features', items: ['/ai', '/lesson-plan', '/study-recommendation', '/question-generator', '/attendance-predictor', '/fee-defaulter', '/parent-report', '/school-health'] },
+  { key: 'ai', label: 'AI Features', items: ['/ai', '/lesson-plan', '/study-recommendation', '/question-generator', '/attendance-predictor', '/fee-defaulter', '/parent-report', '/school-health', '/textbook-ai'] },
   { key: 'system', label: 'System', items: ['/admin-panel', '/gallery', '/settings'] },
 ]
 
