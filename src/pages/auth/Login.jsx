@@ -11,7 +11,7 @@ export default function Login() {
   const [tab, setTab] = useState('login')
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
+  const { login, loginDemo } = useAuth()
   const navigate = useNavigate()
 
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
@@ -27,8 +27,21 @@ export default function Login() {
       toast.success(`Welcome, ${user.full_name}!`)
       navigate('/dashboard')
     } catch (err) {
-      toast.error(err.response?.data?.non_field_errors?.[0] || 'Login failed')
+      if (!err.response || err.message?.includes('Network Error') || err.response?.status >= 500 || err.response?.status === 404) {
+        toast('Backend offline. Entering Interactive Demo Mode...', { icon: '⚡' })
+        const user = loginDemo('school_admin')
+        toast.success(`Welcome, ${user.full_name}!`)
+        navigate('/dashboard')
+      } else {
+        toast.error(err.response?.data?.non_field_errors?.[0] || 'Login failed')
+      }
     } finally { setLoading(false) }
+  }
+
+  const handleDemoAccess = (role = 'school_admin') => {
+    const user = loginDemo(role)
+    toast.success(`Logged in as ${user.full_name}`)
+    navigate('/dashboard')
   }
 
   const handleRegister = async (e) => {
@@ -114,6 +127,34 @@ export default function Login() {
                 className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition">
                 {loading ? 'Signing in...' : 'Sign In'}
               </button>
+
+              {/* Quick Demo Access */}
+              <div className="pt-4 border-t border-slate-700/60 mt-4">
+                <p className="text-xs text-slate-400 text-center mb-2 font-medium">⚡ Quick Demo Access (Explore as):</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleDemoAccess('school_admin')}
+                    className="bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 text-xs py-2 px-1 rounded-lg font-medium transition text-center"
+                  >
+                    👑 Admin
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDemoAccess('teacher')}
+                    className="bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/30 text-xs py-2 px-1 rounded-lg font-medium transition text-center"
+                  >
+                    👨‍🏫 Teacher
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDemoAccess('student')}
+                    className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 text-xs py-2 px-1 rounded-lg font-medium transition text-center"
+                  >
+                    🎓 Student
+                  </button>
+                </div>
+              </div>
             </form>
           )}
 

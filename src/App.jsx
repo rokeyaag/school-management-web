@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Sidebar from './components/common/Sidebar'
@@ -60,7 +60,7 @@ function Layout() {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Toaster position="top-right" toastOptions={{
           style: { background: '#1E293B', color: '#E2E8F0', border: '1px solid #334155' }
         }} />
@@ -99,7 +99,7 @@ function App() {
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </AuthProvider>
   )
 }
